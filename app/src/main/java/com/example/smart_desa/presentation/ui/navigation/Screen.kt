@@ -11,4 +11,6 @@ sealed class Screen(val route: String) {
     // Rute untuk tab di bottom nav
     object Home : Screen("home_tab")
     object Profile : Screen("profile_tab")
+    object Layanan : Screen("layanan_tab")
+    object Pengajuan : Screen("pengajuan_tab")
 }

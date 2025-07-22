@@ -10,12 +10,23 @@ import com.example.smart_desa.presentation.navigation.Screen
 // Asumsikan Anda punya LoginScreen dan RegisterScreen yang sudah dimodifikasi
 import com.example.smart_desa.presentation.ui.screen.auth.login.LoginScreen
 import com.example.smart_desa.presentation.ui.screen.auth.register.RegisterScreen
+import com.example.smart_desa.presentation.ui.screen.splash.SplashScreen
 
 @Composable
 fun RootNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
+    NavHost(navController = navController, startDestination = "splash_screen") {
+        composable("splash_screen") {
+            SplashScreen(
+                onTimeout = {
+                    // Setelah timeout, navigasi ke Login dan hapus splash dari back stack
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo("splash_screen") { inclusive = true }
+                    }
+                }
+            )
+        }
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {

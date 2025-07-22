@@ -17,7 +17,8 @@ import com.example.smart_desa.presentation.navigation.Screen
 
 @Composable
 fun LoginScreen(
-    navController: NavController,
+    onLoginSuccess: () -> Unit,
+    onNavigateToRegister: () -> Unit,
     loginViewModel: LoginViewModel = viewModel()
 ) {
     val state by loginViewModel.state.collectAsState()
@@ -53,11 +54,7 @@ fun LoginScreen(
             Button(
                 onClick = {
                     loginViewModel.login(
-                        onLoginSuccess = {
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.Login.route) { inclusive = true }
-                            }
-                        },
+                        onLoginSuccess = onLoginSuccess,
                         onLoginFailed = {
                             Toast.makeText(context, "NIK atau Password Salah", Toast.LENGTH_SHORT).show()
                         }
@@ -69,7 +66,7 @@ fun LoginScreen(
                 Text("Login")
             }
             TextButton(
-                onClick = { navController.navigate(Screen.Register.route) },
+                onClick = onNavigateToRegister,
                 enabled = !state.isLoading
             ) {
                 Text("Belum punya akun? Daftar di sini")

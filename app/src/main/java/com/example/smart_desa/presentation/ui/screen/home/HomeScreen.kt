@@ -17,7 +17,10 @@ import androidx.navigation.NavController
 
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(
+    // Terima sebuah aksi lambda untuk logout
+    onLogout: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -29,11 +32,7 @@ fun HomeScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
         Text("Ini adalah halaman Beranda (Home).")
         Spacer(modifier = Modifier.height(32.dp))
-        Button(onClick = {
-            navController.navigate("login") {
-                popUpTo("home") { inclusive = true }
-            }
-        }) {
+        Button(onClick = onLogout) { // Panggil aksi logout saat tombol ditekan
             Text("Logout")
         }
     }

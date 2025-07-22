@@ -34,6 +34,9 @@ fun RootNavigation() {
                 onRegisterSuccess = {
                     // Kembali ke layar login setelah register
                     navController.popBackStack()
+                },
+                onBackPress = {
+                    navController.popBackStack()
                 }
             )
         }

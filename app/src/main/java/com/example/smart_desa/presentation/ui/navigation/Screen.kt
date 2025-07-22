@@ -1,7 +1,14 @@
 package com.example.smart_desa.presentation.navigation
 
 sealed class Screen(val route: String) {
+    // Rute untuk alur Autentikasi
     object Login : Screen("login_screen")
     object Register : Screen("register_screen")
-    object Home : Screen("home_screen")
+
+    // Rute untuk alur utama setelah login (termasuk bottom nav)
+    object Main : Screen("main_screen")
+
+    // Rute untuk tab di bottom nav
+    object Home : Screen("home_tab")
+    object Profile : Screen("profile_tab")
 }

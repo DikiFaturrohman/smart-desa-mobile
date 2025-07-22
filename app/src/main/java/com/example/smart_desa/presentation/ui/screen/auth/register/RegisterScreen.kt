@@ -25,7 +25,9 @@ import androidx.navigation.NavController
 
 
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen(
+    onRegisterSuccess: () -> Unit
+) {
     var nik by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var namaLengkap by remember { mutableStateOf("") }
@@ -51,7 +53,7 @@ fun RegisterScreen(navController: NavController) {
             onClick = {
                 // Simulasi registrasi berhasil
                 Toast.makeText(context, "Registrasi Berhasil, Silakan Login", Toast.LENGTH_SHORT).show()
-                navController.popBackStack() // Kembali ke layar login
+                onRegisterSuccess() // Kembali ke layar login
             },
             modifier = Modifier.fillMaxWidth()
         ) {

@@ -3,7 +3,9 @@ package com.example.smart_desa.presentation
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MiscellaneousServices
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -22,6 +24,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.smart_desa.presentation.navigation.Screen
 import com.example.smart_desa.presentation.ui.navigation.BottomNavItem
 import com.example.smart_desa.presentation.ui.screen.home.HomeScreen
+import com.example.smart_desa.presentation.ui.screen.layanan.LayananScreen
+import com.example.smart_desa.presentation.ui.screen.pengajuan.PengajuanScreen
 import com.example.smart_desa.presentation.ui.screen.profile.ProfileScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -35,6 +39,8 @@ fun MainScreen(
 
     val items = listOf(
         BottomNavItem("Home", Screen.Home.route, Icons.Default.Home),
+        BottomNavItem("Layanan", Screen.Layanan.route, Icons.Default.MiscellaneousServices),
+        BottomNavItem("Pengajuan", Screen.Pengajuan.route, Icons.Default.Description),
         BottomNavItem("Profil", Screen.Profile.route, Icons.Default.Person)
     )
 
@@ -74,6 +80,8 @@ fun MainScreen(
             composable(Screen.Profile.route) {
                 ProfileScreen()
             }
+            composable(Screen.Layanan.route) { LayananScreen() }
+            composable(Screen.Pengajuan.route) { PengajuanScreen() }
         }
     }
 }

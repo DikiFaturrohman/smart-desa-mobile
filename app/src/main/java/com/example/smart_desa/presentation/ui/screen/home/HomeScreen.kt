@@ -26,89 +26,115 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.smart_desa.R // Pastikan R di-import
+import com.example.smart_desa.R
 
+/**
+ * Composable utama untuk halaman Home aplikasi Smart Desa
+ * Menampilkan header, menu grid, info grafis, dan berita dalam layout vertikal
+ *
+ * @param onLogout Callback function untuk aksi logout (disediakan untuk kebutuhan masa depan)
+ */
 @Composable
 fun HomeScreen(
     onLogout: () -> Unit // Aksi logout tetap ada jika dibutuhkan di tempat lain
 ) {
-    val primaryColor = Color(0xFF00BFA5)
+    // === DEFINISI WARNA ===
+    val primaryColor = Color(0xFF00BFA5) // Warna hijau toska utama aplikasi
     val backgroundColor = Color(0xFF00BFA5) // Warna latar belakang sedikit hijau
 
+    // === CONTAINER UTAMA DENGAN GRADIENT BACKGROUND ===
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize() // Mengisi seluruh ukuran layar
             .background(
+                // Gradient vertikal dari hijau toska ke background color
                 brush = Brush.verticalGradient(
                     colors = listOf(primaryColor, backgroundColor),
-                    startY = 0f,
+                    startY = 0f, // Mulai dari atas
                     endY = 1000f // Sesuaikan nilai ini untuk panjang gradient
                 )
             )
     ) {
+        // === SCROLLABLE CONTENT MENGGUNAKAN LAZY COLUMN ===
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = PaddingValues(16.dp) // Padding untuk seluruh content
         ) {
-            // Bagian Header
+            // === BAGIAN HEADER ===
             item {
-                HomeHeader()
-                Spacer(modifier = Modifier.height(24.dp))
+                HomeHeader() // Composable untuk header dengan logo dan nama desa
+                Spacer(modifier = Modifier.height(24.dp)) // Spacing setelah header
             }
 
-            // Bagian Menu Grid
+            // === BAGIAN MENU GRID ===
             item {
-                MenuGridSection()
-                Spacer(modifier = Modifier.height(24.dp))
+                MenuGridSection() // Composable untuk grid menu layanan
+                Spacer(modifier = Modifier.height(24.dp)) // Spacing setelah menu
             }
 
-            // Bagian Info Grafis
+            // === BAGIAN INFO GRAFIS ===
             item {
-                InfoGrafisSection()
-                Spacer(modifier = Modifier.height(24.dp))
+                InfoGrafisSection() // Composable untuk menampilkan info grafis
+                Spacer(modifier = Modifier.height(24.dp)) // Spacing setelah info grafis
             }
 
-            // Bagian Berita
+            // === BAGIAN BERITA ===
             item {
-                BeritaSection()
+                BeritaSection() // Composable untuk menampilkan berita terkini
             }
         }
     }
 }
 
+/**
+ * Composable untuk menampilkan header halaman home
+ * Berisi logo desa dan informasi nama desa dengan kabupaten
+ */
 @Composable
 fun HomeHeader() {
+    // Row untuk layout horizontal logo dan text
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically // Align vertikal ke tengah
     ) {
-        // Ganti dengan logo desa Anda
+        // === LOGO DESA ===
         Image(
-            painter = painterResource(id = R.drawable.lambang_kabupaten_subang),
-            contentDescription = "Logo Desa",
+            painter = painterResource(id = R.drawable.lambang_kabupaten_subang), // Resource logo
+            contentDescription = "Logo Desa", // Accessibility description
             modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
+                .size(48.dp) // Ukuran logo 48x48 dp
+                .clip(CircleShape) // Bentuk circular
         )
-        Spacer(modifier = Modifier.width(12.dp))
+
+        Spacer(modifier = Modifier.width(12.dp)) // Spacing horizontal antara logo dan text
+
+        // === INFORMASI DESA ===
         Column {
+            // Nama desa dengan styling bold dan warna putih
             Text(
                 text = "Desa Sukamandi",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
+            // Nama kabupaten dengan warna putih transparan
             Text(
                 text = "Kab. Subang",
-                color = Color.White.copy(alpha = 0.8f),
+                color = Color.White.copy(alpha = 0.8f), // Transparansi 80%
                 fontSize = 14.sp
             )
         }
     }
 }
 
+/**
+ * Composable untuk menampilkan grid menu layanan desa
+ * Menu ditampilkan dalam Card dengan arrangement grid custom (4 kolom per baris)
+ */
 @Composable
 fun MenuGridSection() {
+    // === DEFINISI MENU ITEMS ===
+    // List menu dengan title dan icon yang akan ditampilkan
     val menuItems = listOf(
         MenuItem("Profil Desa", Icons.Default.AccountBalance),
         MenuItem("Potensi Desa", Icons.Default.Landscape),
@@ -119,122 +145,159 @@ fun MenuGridSection() {
         MenuItem("Galeri", Icons.Default.PhotoLibrary)
     )
 
+    // === CARD CONTAINER UNTUK MENU ===
     Card(
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        shape = RoundedCornerShape(16.dp), // Rounded corner dengan radius 16dp
+        elevation = CardDefaults.cardElevation(4.dp), // Shadow elevation 4dp
+        colors = CardDefaults.cardColors(containerColor = Color.White) // Background putih
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp) // Padding internal card
         ) {
-            // Kita bagi item menjadi beberapa baris, setiap baris berisi 4 item
+            // === ARRANGEMENT MENU DALAM GRID CUSTOM ===
+            // Membagi item menjadi beberapa baris, setiap baris berisi maksimal 4 item
             menuItems.chunked(4).forEach { rowItems ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        .padding(vertical = 8.dp), // Padding vertikal untuk setiap baris
+                    horizontalArrangement = Arrangement.spacedBy(16.dp) // Spacing antar item
                 ) {
-                    // Tampilkan setiap item di dalam baris
+                    // === RENDER SETIAP MENU ITEM ===
                     rowItems.forEach { item ->
-                        Box(modifier = Modifier.weight(1f)) {
-                            MenuIconItem(menuItem = item, onClick = { /* TODO: Handle menu click */ })
+                        Box(modifier = Modifier.weight(1f)) { // Weight 1f untuk distribusi equal
+                            MenuIconItem(
+                                menuItem = item,
+                                onClick = { /* TODO: Handle menu click */ }
+                            )
                         }
                     }
+
+                    // === FILL EMPTY SPACES ===
                     // Jika item dalam satu baris kurang dari 4, tambahkan Spacer kosong
-                    // agar tata letak tetap rapi
+                    // agar tata letak tetap rapi dan konsisten
                     repeat(4 - rowItems.size) {
                         Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }
-
-        }}
+        }
+    }
 }
 
+/**
+ * Composable untuk menampilkan individual menu item
+ * Berisi icon dalam circle background dan text label di bawahnya
+ *
+ * @param menuItem Data class berisi title dan icon untuk menu
+ * @param onClick Callback function yang dipanggil saat item diklik
+ */
 @Composable
 fun MenuIconItem(menuItem: MenuItem, onClick: () -> Unit) {
+    // Column untuk layout vertikal icon dan text
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable(onClick = onClick)
+        horizontalAlignment = Alignment.CenterHorizontally, // Center alignment horizontal
+        modifier = Modifier.clickable(onClick = onClick) // Membuat seluruh area clickable
     ) {
+        // === ICON CONTAINER ===
         Box(
             modifier = Modifier
-                .size(56.dp)
-                .clip(CircleShape)
-                .background(Color(0xFFF0F0F0)),
-            contentAlignment = Alignment.Center
+                .size(56.dp) // Ukuran container 56x56 dp
+                .clip(CircleShape) // Bentuk circular
+                .background(Color(0xFFF0F0F0)), // Background abu-abu terang
+            contentAlignment = Alignment.Center // Center alignment untuk icon
         ) {
+            // Icon dengan styling dan ukuran custom
             Icon(
-                imageVector = menuItem.icon,
-                contentDescription = menuItem.title,
-                tint = Color.Gray,
-                modifier = Modifier.size(28.dp)
+                imageVector = menuItem.icon, // Vector icon dari MenuItem
+                contentDescription = menuItem.title, // Accessibility description
+                tint = Color.Gray, // Warna icon abu-abu
+                modifier = Modifier.size(28.dp) // Ukuran icon 28x28 dp
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
+
+        Spacer(modifier = Modifier.height(8.dp)) // Spacing antara icon dan text
+
+        // === TEXT LABEL ===
         Text(
-            text = menuItem.title,
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center,
-            lineHeight = 14.sp
+            text = menuItem.title, // Text dari MenuItem
+            fontSize = 12.sp, // Ukuran font kecil
+            textAlign = TextAlign.Center, // Center alignment
+            lineHeight = 14.sp // Line height untuk readability
         )
     }
 }
 
+/**
+ * Composable untuk menampilkan section Info Grafis
+ * Berisi judul section dan gambar infografis dalam Card
+ */
 @Composable
 fun InfoGrafisSection() {
     Column(modifier = Modifier.fillMaxWidth()) {
+        // === JUDUL SECTION ===
         Text(
             text = "Info Grafis",
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleLarge, // Typography style large
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = Color.White // Warna putih untuk kontras dengan background
         )
-        Spacer(modifier = Modifier.height(12.dp))
+
+        Spacer(modifier = Modifier.height(12.dp)) // Spacing antara judul dan card
+
+        // === CARD INFOGRAFIS ===
         Card(
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(4.dp)
+            shape = RoundedCornerShape(16.dp), // Rounded corner
+            elevation = CardDefaults.cardElevation(4.dp) // Shadow elevation
         ) {
-            // Ganti dengan gambar banner Anda
+            // Gambar infografis dengan styling
             Image(
-                painter = painterResource(id = R.drawable.infografis),
-                contentDescription = "Info Grafis Vaksinasi",
+                painter = painterResource(id = R.drawable.infografis), // Resource gambar
+                contentDescription = "Info Grafis Vaksinasi", // Accessibility description
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                contentScale = ContentScale.Crop
+                    .fillMaxWidth() // Lebar penuh card
+                    .height(150.dp) // Tinggi fixed 150dp
+                    .clip(RoundedCornerShape(16.dp)), // Clipping sesuai card shape
+                contentScale = ContentScale.Crop // Crop untuk maintain aspect ratio
             )
         }
     }
 }
 
+/**
+ * Composable untuk menampilkan section Berita
+ * Berisi judul section dan gambar berita dalam Card yang clickable
+ */
 @Composable
 fun BeritaSection() {
     Column(modifier = Modifier.fillMaxWidth()) {
+        // === JUDUL SECTION ===
         Text(
             text = "Berita",
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleLarge, // Typography style large
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = Color.White // Warna putih untuk kontras
         )
-        Spacer(modifier = Modifier.height(12.dp))
+
+        Spacer(modifier = Modifier.height(12.dp)) // Spacing antara judul dan card
+
+        // === CARD BERITA ===
         Card(
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            modifier = Modifier.clickable { /* TODO: Handle berita click */ }
+            shape = RoundedCornerShape(16.dp), // Rounded corner
+            elevation = CardDefaults.cardElevation(4.dp), // Shadow elevation
+            colors = CardDefaults.cardColors(containerColor = Color.White), // Background putih
+            modifier = Modifier.clickable { /* TODO: Handle berita click */ } // Clickable card
         ) {
-            // Ganti dengan gambar berita Anda
+            // Gambar berita dengan styling
             Image(
-                painter = painterResource(id = R.drawable.berita_subang),
-                contentDescription = "Berita Kecelakaan",
+                painter = painterResource(id = R.drawable.berita_subang), // Resource gambar berita
+                contentDescription = "Berita Kecelakaan", // Accessibility description
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp),
-                contentScale = ContentScale.Crop
+                    .fillMaxWidth() // Lebar penuh card
+                    .height(180.dp), // Tinggi fixed 180dp
+                contentScale = ContentScale.Crop // Crop untuk maintain aspect ratio
             )
+            // === OPTIONAL: JUDUL BERITA ===
             // Anda bisa menambahkan judul berita di bawah gambar jika perlu
             // Text(text = "Judul Berita", modifier = Modifier.padding(16.dp))
         }

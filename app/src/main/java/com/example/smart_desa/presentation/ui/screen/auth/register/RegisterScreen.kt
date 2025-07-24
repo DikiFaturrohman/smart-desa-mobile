@@ -27,208 +27,369 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.smart_desa.R
 
+/**
+ * Composable utama untuk halaman registrasi/pendaftaran akun baru
+ * Menggunakan Scaffold untuk layout yang konsisten dengan TopAppBar
+ * Form menggunakan LazyColumn untuk handling content yang panjang dan scrollable
+ *
+ * @param onRegisterSuccess Callback yang dipanggil ketika registrasi berhasil
+ * @param onBackPress Callback untuk navigasi kembali ke halaman sebelumnya
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
     onBackPress: () -> Unit
 ) {
-    // State untuk semua field
-    var nik by remember { mutableStateOf("") }
-    var namaLengkap by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var konfirmasiPassword by remember { mutableStateOf("") }
-    var nomorTelepon by remember { mutableStateOf("") }
-    var alamatLengkap by remember { mutableStateOf("") }
-    var tanggalLahir by remember { mutableStateOf("") }
-    var selectedDesa by remember { mutableStateOf("") }
+    // === STATE MANAGEMENT UNTUK FORM FIELDS ===
+    // Menggunakan remember dan mutableStateOf untuk local state management
+    var nik by remember { mutableStateOf("") } // State untuk input NIK
+    var namaLengkap by remember { mutableStateOf("") } // State untuk input nama lengkap
+    var email by remember { mutableStateOf("") } // State untuk input email
+    var password by remember { mutableStateOf("") } // State untuk input password
+    var konfirmasiPassword by remember { mutableStateOf("") } // State untuk konfirmasi password
+    var nomorTelepon by remember { mutableStateOf("") } // State untuk input nomor telepon
+    var alamatLengkap by remember { mutableStateOf("") } // State untuk input alamat
+    var tanggalLahir by remember { mutableStateOf("") } // State untuk input tanggal lahir
+    var selectedDesa by remember { mutableStateOf("") } // State untuk dropdown pilihan desa
 
-    val context = LocalContext.current
-    val primaryColor = Color(0xFF00BFA5)
+    // === CONTEXT DAN STYLING ===
+    val context = LocalContext.current // Context untuk Toast notification
+    val primaryColor = Color(0xFF00BFA5) // Warna primary hijau toska aplikasi
 
-    // PERUBAHAN UTAMA: Gunakan Scaffold sebagai dasar
+    // === SCAFFOLD SEBAGAI CONTAINER UTAMA ===
+    // Menggunakan Scaffold untuk layout yang konsisten dengan TopAppBar
     Scaffold(
+        // === TOP APP BAR ===
         topBar = {
             TopAppBar(
-                title = { },
+                title = { }, // Empty title, hanya menggunakan navigation icon
                 navigationIcon = {
+                    // Tombol back dengan arrow icon
                     IconButton(onClick = onBackPress) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Kembali",
-                            tint = Color.White
+                            contentDescription = "Kembali", // Accessibility description
+                            tint = Color.White // Warna putih untuk kontras dengan background
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color.Transparent // Transparent agar terlihat gradient background
                 )
             )
         },
-        // Atur warna container Scaffold agar cocok jika ada kebocoran visual
+        // Container color scaffold disesuaikan dengan primary color
         containerColor = primaryColor
-    ) { paddingValues -> // paddingValues dari Scaffold
+    ) { paddingValues -> // PaddingValues dari Scaffold untuk menghindari overlap dengan TopAppBar
+
+        // === MAIN CONTENT COLUMN ===
         Column(
-            // Column ini tidak lagi menggunakan padding, agar bisa memenuhi seluruh layar
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize() // Mengisi seluruh ukuran layar
         ) {
-            // Bagian Atas - Latar Hijau dan Logo
+            // === BAGIAN ATAS - HEADER DENGAN LOGO ===
+            // Box container untuk bagian header dengan gradient background
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.7f)
+                    .weight(0.7f) // Mengambil 70% dari ruang vertikal tersedia
                     .background(
+                        // Gradient vertikal dari hijau toska ke hijau toska gelap
                         brush = Brush.verticalGradient(
                             colors = listOf(primaryColor, Color(0xFF00897B))
                         )
                     ),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center // Center alignment untuk logo
             ) {
-                // Spacer ini untuk mendorong Logo ke bawah sesuai tinggi TopAppBar
-                // agar posisi logo tetap sama seperti desain
+                // Spacer untuk mendorong logo ke bawah sesuai tinggi TopAppBar
+                // agar posisi logo tetap konsisten dengan desain
                 Spacer(modifier = Modifier.height(paddingValues.calculateTopPadding()))
+
+                // === LOGO KABUPATEN ===
                 Image(
                     painter = painterResource(id = R.drawable.lambang_kabupaten_subang),
-                    contentDescription = "Logo Desa",
+                    contentDescription = "Logo Desa", // Accessibility description
                     modifier = Modifier
-                        .size(110.dp)
-                        .shadow(8.dp, CircleShape)
-                        .clip(CircleShape)
-                        .background(Color.White)
-                        .padding(12.dp),
-                    contentScale = ContentScale.Fit
+                        .size(110.dp) // Ukuran logo 110x110 dp
+                        .shadow(8.dp, CircleShape) // Shadow dengan radius 8dp dan bentuk circle
+                        .clip(CircleShape) // Clipping gambar menjadi lingkaran
+                        .background(Color.White) // Background putih untuk logo
+                        .padding(12.dp), // Padding internal logo
+                    contentScale = ContentScale.Fit // Scaling agar gambar fit dalam container
                 )
             }
-            // Bagian Bawah - Kartu Form Putih
+
+            // === BAGIAN BAWAH - FORM REGISTRASI ===
+            // LazyColumn untuk form yang panjang dan scrollable
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(2.3f)
-                    .background(MaterialTheme.colorScheme.surface),
-                // Padding dari Scaffold diterapkan di sini agar item pertama tidak tertutup TopAppBar
+                    .weight(2.3f) // Mengambil 230% dari ruang vertikal tersisa
+                    .background(MaterialTheme.colorScheme.surface), // Background sesuai theme
+                // Content padding untuk spacing dan menghindari overlap dengan TopAppBar
                 contentPadding = PaddingValues(
-                    top = 24.dp, // Padding atas ditambah padding scaffold
-                    bottom = 24.dp,
-                    start = 24.dp,
-                    end = 24.dp
+                    top = 24.dp, // Padding atas
+                    bottom = 24.dp, // Padding bawah
+                    start = 24.dp, // Padding kiri
+                    end = 24.dp // Padding kanan
                 ),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally // Center alignment horizontal
             ) {
-                item { FormInputField(label = "NIK :", value = nik, placeholder = "NIK", onValueChange = { nik = it }) }
-                item { FormInputField(label = "Nama Lengkap :", value = namaLengkap, placeholder = "Nama Lengkap", onValueChange = { namaLengkap = it }) }
-                item { FormInputField(label = "Email :", value = email, placeholder = "Email", onValueChange = { email = it }) }
-                item { FormInputField(label = "Password :", value = password, placeholder = "Password", onValueChange = { password = it }, isPassword = true) }
-                item { FormInputField(label = "Konfirmasi Password :", value = konfirmasiPassword, placeholder = "Konfirmasi Password", onValueChange = { konfirmasiPassword = it }, isPassword = true) }
-                item { FormInputField(label = "Nomor Telepon :", value = nomorTelepon, placeholder = "Nomor Telepon", onValueChange = { nomorTelepon = it }) }
-                item { FormInputField(label = "Alamat Lengkap :", value = alamatLengkap, placeholder = "Alamat Lengkap", onValueChange = { alamatLengkap = it }) }
-                item { FormInputField(label = "Tanggal Lahir :", value = tanggalLahir, placeholder = "mm/dd/yy", onValueChange = { tanggalLahir = it }) }
-                item { DesaDropdownField(selectedText = selectedDesa, onDesaSelected = { selectedDesa = it }) }
+                // === FORM INPUT FIELDS ===
+                // Setiap item menggunakan FormInputField composable untuk konsistensi
+
+                // Input field untuk NIK
                 item {
-                    Spacer(modifier = Modifier.height(24.dp))
+                    FormInputField(
+                        label = "NIK :",
+                        value = nik,
+                        placeholder = "NIK",
+                        onValueChange = { nik = it }
+                    )
+                }
+
+                // Input field untuk Nama Lengkap
+                item {
+                    FormInputField(
+                        label = "Nama Lengkap :",
+                        value = namaLengkap,
+                        placeholder = "Nama Lengkap",
+                        onValueChange = { namaLengkap = it }
+                    )
+                }
+
+                // Input field untuk Email
+                item {
+                    FormInputField(
+                        label = "Email :",
+                        value = email,
+                        placeholder = "Email",
+                        onValueChange = { email = it }
+                    )
+                }
+
+                // Input field untuk Password (dengan password transformation)
+                item {
+                    FormInputField(
+                        label = "Password :",
+                        value = password,
+                        placeholder = "Password",
+                        onValueChange = { password = it },
+                        isPassword = true // Flag untuk password transformation
+                    )
+                }
+
+                // Input field untuk Konfirmasi Password
+                item {
+                    FormInputField(
+                        label = "Konfirmasi Password :",
+                        value = konfirmasiPassword,
+                        placeholder = "Konfirmasi Password",
+                        onValueChange = { konfirmasiPassword = it },
+                        isPassword = true // Flag untuk password transformation
+                    )
+                }
+
+                // Input field untuk Nomor Telepon
+                item {
+                    FormInputField(
+                        label = "Nomor Telepon :",
+                        value = nomorTelepon,
+                        placeholder = "Nomor Telepon",
+                        onValueChange = { nomorTelepon = it }
+                    )
+                }
+
+                // Input field untuk Alamat Lengkap
+                item {
+                    FormInputField(
+                        label = "Alamat Lengkap :",
+                        value = alamatLengkap,
+                        placeholder = "Alamat Lengkap",
+                        onValueChange = { alamatLengkap = it }
+                    )
+                }
+
+                // Input field untuk Tanggal Lahir
+                item {
+                    FormInputField(
+                        label = "Tanggal Lahir :",
+                        value = tanggalLahir,
+                        placeholder = "mm/dd/yy",
+                        onValueChange = { tanggalLahir = it }
+                    )
+                }
+
+                // Dropdown field untuk pilihan desa
+                item {
+                    DesaDropdownField(
+                        selectedText = selectedDesa,
+                        onDesaSelected = { selectedDesa = it }
+                    )
+                }
+
+                // === SUBMIT BUTTON ===
+                item {
+                    Spacer(modifier = Modifier.height(24.dp)) // Spacing sebelum button
+
+                    // Tombol registrasi utama
                     Button(
                         onClick = {
+                            // Aksi ketika tombol diklik
+                            // Menampilkan toast sukses dan panggil callback
                             Toast.makeText(context, "Registrasi Berhasil, Silakan Login", Toast.LENGTH_SHORT).show()
-                            onRegisterSuccess()
+                            onRegisterSuccess() // Callback ke parent untuk navigasi
                         },
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = primaryColor)
+                            .fillMaxWidth() // Lebar penuh
+                            .height(50.dp), // Tinggi 50dp
+                        shape = RoundedCornerShape(12.dp), // Rounded corner 12dp
+                        colors = ButtonDefaults.buttonColors(containerColor = primaryColor) // Warna primary
                     ) {
-                        Text("Daftar", fontSize = 16.sp)
+                        Text("Daftar", fontSize = 16.sp) // Text dengan ukuran font 16sp
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Spacer(modifier = Modifier.height(16.dp)) // Spacing setelah button
                 }
             }
         }
     }
 }
 
-// ... (Composable FormInputField dan DesaDropdownField tetap sama, tidak perlu diubah)
-// ...
+// === COMPOSABLE HELPER FUNCTIONS ===
 
-    // Composable terpisah untuk input field agar tidak berulang
-    @Composable
-    private fun FormInputField(
-        label: String,
-        value: String,
-        placeholder: String,
-        onValueChange: (String) -> Unit,
-        isPassword: Boolean = false
+/**
+ * Composable terpisah untuk input field agar tidak berulang
+ * Menyediakan styling yang konsisten untuk semua form field
+ *
+ * @param label Label yang ditampilkan di atas field
+ * @param value Nilai current dari field
+ * @param placeholder Placeholder text untuk field
+ * @param onValueChange Callback ketika nilai field berubah
+ * @param isPassword Flag untuk menentukan apakah field adalah password (default: false)
+ */
+@Composable
+private fun FormInputField(
+    label: String,
+    value: String,
+    placeholder: String,
+    onValueChange: (String) -> Unit,
+    isPassword: Boolean = false
+) {
+    // Column untuk layout vertikal label dan TextField
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.Start // Alignment kiri untuk label
     ) {
-        Column(
+        // === LABEL TEXT ===
+        Text(
+            label,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.SemiBold
+        )
+
+        // === TEXT FIELD ===
+        TextField(
+            value = value, // Nilai dari state
+            onValueChange = onValueChange, // Callback untuk update state
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(label, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
-            TextField(
-                value = value,
-                onValueChange = onValueChange,
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(placeholder, color = Color.LightGray) },
-                visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color(0xFF00BFA5),
-                    cursorColor = Color(0xFF00BFA5)
-                ),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+            placeholder = {
+                Text(placeholder, color = Color.LightGray) // Placeholder dengan warna abu-abu terang
+            },
+            // Visual transformation untuk password field
+            visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent, // Background transparan saat focus
+                unfocusedContainerColor = Color.Transparent, // Background transparan saat tidak focus
+                focusedIndicatorColor = Color(0xFF00BFA5), // Warna garis bawah saat focus
+                cursorColor = Color(0xFF00BFA5) // Warna cursor
+            ),
+            singleLine = true // Single line input
+        )
+
+        // Spacing setelah setiap field
+        Spacer(modifier = Modifier.height(16.dp))
     }
+}
 
-    // Composable terpisah untuk dropdown desa
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    private fun DesaDropdownField(
-        selectedText: String,
-        onDesaSelected: (String) -> Unit
+/**
+ * Composable terpisah untuk dropdown field pilihan desa
+ * Menggunakan ExposedDropdownMenu untuk user experience yang baik
+ *
+ * @param selectedText Text yang currently selected
+ * @param onDesaSelected Callback ketika desa dipilih
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DesaDropdownField(
+    selectedText: String,
+    onDesaSelected: (String) -> Unit
+) {
+    // === DROPDOWN OPTIONS ===
+    // List pilihan desa yang tersedia
+    val desaOptions = listOf(
+        "Desa Sukamandi",
+        "Desa Sagalaherang Kaler",
+        "Desa Sagalaherang Kidul"
+    )
+
+    // State untuk mengontrol expanded/collapsed dropdown
+    var expanded by remember { mutableStateOf(false) }
+
+    // Column untuk layout vertikal label dan dropdown
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.Start
     ) {
-        val desaOptions = listOf("Desa Sukamandi", "Desa Sagalaherang Kaler", "Desa Sagalaherang Kidul")
-        var expanded by remember { mutableStateOf(false) }
+        // === LABEL TEXT ===
+        Text(
+            "Pilih Desa :",
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.SemiBold
+        )
 
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.Start
+        // === EXPOSED DROPDOWN MENU ===
+        ExposedDropdownMenuBox(
+            expanded = expanded, // State expanded
+            onExpandedChange = { expanded = !expanded } // Toggle expanded state
         ) {
-            Text("Pilih Desa :", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
-            ) {
-                TextField(
-                    value = selectedText,
-                    onValueChange = {},
-                    readOnly = true,
-                    placeholder = { Text("Nama Desa", color = Color.LightGray) },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedIndicatorColor = Color(0xFF00BFA5)
-                    )
+            // === DROPDOWN TRIGGER FIELD ===
+            TextField(
+                value = selectedText, // Selected value
+                onValueChange = {}, // Empty karena read-only
+                readOnly = true, // Read-only field, hanya bisa diklik untuk membuka dropdown
+                placeholder = {
+                    Text("Nama Desa", color = Color.LightGray) // Placeholder
+                },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) // Arrow icon
+                },
+                modifier = Modifier
+                    .menuAnchor() // Anchor untuk dropdown menu
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent, // Background transparan
+                    unfocusedContainerColor = Color.Transparent, // Background transparan
+                    focusedIndicatorColor = Color(0xFF00BFA5) // Warna garis bawah
                 )
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    desaOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                onDesaSelected(option)
-                                expanded = false
-                            }
-                        )
-                    }
+            )
+
+            // === DROPDOWN MENU ITEMS ===
+            ExposedDropdownMenu(
+                expanded = expanded, // State expanded
+                onDismissRequest = { expanded = false } // Close dropdown ketika klik di luar
+            ) {
+                // Iterasi semua pilihan desa
+                desaOptions.forEach { option ->
+                    DropdownMenuItem(
+                        text = { Text(option) }, // Text pilihan
+                        onClick = {
+                            onDesaSelected(option) // Callback dengan pilihan yang dipilih
+                            expanded = false // Close dropdown setelah pilih
+                        }
+                    )
                 }
             }
         }
     }
+}

@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.smart_desa.presentation.MainScreen
 import com.example.smart_desa.presentation.navigation.Screen
+import com.example.smart_desa.presentation.ui.screen.auth.forgotpassword.ForgotPasswordScreen
 import com.example.smart_desa.presentation.ui.screen.auth.login.LoginScreen
 import com.example.smart_desa.presentation.ui.screen.auth.register.RegisterScreen
 import com.example.smart_desa.presentation.ui.screen.splash.SplashScreen
@@ -57,21 +58,17 @@ fun RootNavigation() {
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
-                    // === NAVIGATION LOGIC: LOGIN SUCCESS TO MAIN ===
-                    // Navigasi ke MainScreen setelah login berhasil
-                    // popUpTo dengan inclusive=true menghapus login screen dari back stack
-                    // Ini mencegah user kembali ke login screen dengan back button
-                    // setelah sudah login (security measure)
                     navController.navigate(Screen.Main.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 },
                 onNavigateToRegister = {
-                    // === NAVIGATION LOGIC: LOGIN TO REGISTER ===
-                    // Navigasi ke RegisterScreen untuk user yang belum punya akun
-                    // Tidak menggunakan popUpTo, sehingga login screen tetap di back stack
-                    // User bisa kembali ke login screen dengan back button
                     navController.navigate(Screen.Register.route)
+                },
+                // Tambahkan callback dan aksinya di sini
+                onNavigateToForgotPassword = {
+                    // Navigasi ke halaman lupa sandi
+                    navController.navigate(Screen.ForgotPassword.route)
                 }
             )
         }
@@ -91,6 +88,18 @@ fun RootNavigation() {
                     // === NAVIGATION LOGIC: BACK BUTTON PRESSED ===
                     // Menangani aksi back button di register screen
                     // popBackStack() kembali ke login screen
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // ==========================================================
+        // === FORGOT PASSWORD SCREEN DESTINATION ===
+        // Layar untuk mereset password melalui nomor telepon
+        composable(Screen.ForgotPassword.route) {
+            ForgotPasswordScreen(
+                onBackPress = {
+                    // Aksi saat tombol kembali ditekan adalah kembali ke layar sebelumnya (Login)
                     navController.popBackStack()
                 }
             )

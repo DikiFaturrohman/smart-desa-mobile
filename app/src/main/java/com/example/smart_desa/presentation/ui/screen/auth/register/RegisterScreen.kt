@@ -9,6 +9,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -276,6 +278,9 @@ private fun FormInputField(
     onValueChange: (String) -> Unit,
     isPassword: Boolean = false
 ) {
+    // State untuk mengontrol visibilitas password, spesifik untuk instance ini
+    var passwordVisible by remember { mutableStateOf(false) }
+
     // Column untuk layout vertikal label dan TextField
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -296,8 +301,28 @@ private fun FormInputField(
             placeholder = {
                 Text(placeholder, color = Color.LightGray) // Placeholder dengan warna abu-abu terang
             },
-            // Visual transformation untuk password field
-            visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+            // Visual transformation kondisional untuk password
+            visualTransformation = if (isPassword && !passwordVisible) {
+                PasswordVisualTransformation()
+            } else {
+                VisualTransformation.None
+            },
+            // Menambahkan ikon di akhir field jika ini adalah field password
+            trailingIcon = {
+                if (isPassword) {
+                    val image = if (passwordVisible)
+                        Icons.Filled.VisibilityOff // Ikon mata tercoret
+                    else
+                        Icons.Filled.Visibility // Ikon mata
+
+                    val description = if (passwordVisible) "Sembunyikan password" else "Tampilkan password"
+
+                    // Tombol ikon untuk mengubah visibilitas password
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(imageVector = image, contentDescription = description)
+                    }
+                }
+            },
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent, // Background transparan saat focus
                 unfocusedContainerColor = Color.Transparent, // Background transparan saat tidak focus

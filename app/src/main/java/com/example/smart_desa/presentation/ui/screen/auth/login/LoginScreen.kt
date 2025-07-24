@@ -8,6 +8,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,6 +27,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -64,7 +68,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f) // Mengambil 1/3 bagian atas layar
-                    .background(    // Gradient vertikal dari hijau toska ke hijau toska gelap
+                    .background(  // Gradient vertikal dari hijau toska ke hijau toska gelap
                         brush = Brush.verticalGradient(
                             colors = listOf(primaryColor, Color(0xFF00897B))
                         )
@@ -79,7 +83,7 @@ fun LoginScreen(
                         .size(120.dp)   // Ukuran logo 120dp x 120dp
                         .shadow(8.dp, CircleShape)  // Shadow dengan radius 8dp
                         .clip(CircleShape)  // Memotong gambar menjadi lingkaran
-                        .background(Color.White)     // Background putih untuk logo
+                        .background(Color.White)    // Background putih untuk logo
                         .padding(12.dp),    // Padding internal logo
                     contentScale = ContentScale.Fit     // Scaling gambar agar fit
                 )
@@ -136,6 +140,8 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // === INPUT FIELD PASSWORD ===
+                // State untuk mengontrol visibilitas password
+                var passwordVisible by remember { mutableStateOf(false) }
                 // Column untuk input password dengan label
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
                     // Label untuk field password
@@ -146,7 +152,8 @@ fun LoginScreen(
                         onValueChange = loginViewModel::onPasswordChange, // Callback ke ViewModel
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("Password", color = Color.LightGray) }, // Placeholder text
-                        visualTransformation = PasswordVisualTransformation(), // Menyembunyikan teks password
+                        // Mengubah visualTransformation berdasarkan state passwordVisible
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), // Keyboard type password
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent, // Background transparan saat focus
@@ -155,7 +162,20 @@ fun LoginScreen(
                             cursorColor = primaryColor // Warna cursor
                         ),
                         singleLine = true, // Single line input
-                        enabled = !state.isLoading // Disable saat loading
+                        enabled = !state.isLoading, // Disable saat loading
+                        // Menambahkan ikon di akhir TextField untuk toggle visibilitas
+                        trailingIcon = {
+                            val image = if (passwordVisible)
+                                Icons.Filled.VisibilityOff
+                            else Icons.Filled.Visibility
+
+                            val description = if (passwordVisible) "Sembunyikan password" else "Tampilkan password"
+
+                            // IconButton untuk mengubah state passwordVisible saat diklik
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(imageVector = image, contentDescription = description)
+                            }
+                        }
                     )
                 }
                 // === FORGOT PASSWORD BUTTON ===

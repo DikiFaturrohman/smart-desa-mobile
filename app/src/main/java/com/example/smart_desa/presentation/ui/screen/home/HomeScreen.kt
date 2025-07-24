@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -234,6 +236,19 @@ fun MenuIconItem(menuItem: MenuItem, onClick: () -> Unit) {
  */
 @Composable
 fun InfoGrafisSection() {
+
+    val infografisItems = listOf(
+        R.drawable.infografis,
+        R.drawable.infograf,
+        R.drawable.info
+    )
+
+    val pagerState = rememberPagerState(pageCount = {
+        infografisItems.size
+    })
+
+    val primaryColor = Color(0xFF00BFA5)
+
     Column(modifier = Modifier.fillMaxWidth()) {
         // === JUDUL SECTION ===
         Text(
@@ -245,23 +260,59 @@ fun InfoGrafisSection() {
 
         Spacer(modifier = Modifier.height(12.dp)) // Spacing antara judul dan card
 
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = 8.dp), // Sedikit padding jika gambar terlalu ke tepi
+            pageSpacing = 16.dp // Jarak antar gambar saat digeser
+
         // === CARD INFOGRAFIS ===
-        Card(
-            shape = RoundedCornerShape(16.dp), // Rounded corner
-            elevation = CardDefaults.cardElevation(4.dp) // Shadow elevation
-        ) {
-            // Gambar infografis dengan styling
-            Image(
-                painter = painterResource(id = R.drawable.infografis), // Resource gambar
-                contentDescription = "Info Grafis Vaksinasi", // Accessibility description
-                modifier = Modifier
-                    .fillMaxWidth() // Lebar penuh card
-                    .height(150.dp) // Tinggi fixed 150dp
-                    .clip(RoundedCornerShape(16.dp)), // Clipping sesuai card shape
-                contentScale = ContentScale.Crop // Crop untuk maintain aspect ratio
-            )
+        ) { page ->
+            // Setiap item di dalam Pager adalah sebuah Card
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Image(
+                    painter = painterResource(id = infografisItems[page]), // Ambil gambar sesuai halaman
+                    contentDescription = "Info Grafis ${page + 1}",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
-    }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // 4. Indikator halaman (titik-titik) di bawah carousel
+        Row(
+            Modifier
+                .height(20.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            // Ulangi sebanyak jumlah gambar
+            repeat(pagerState.pageCount) { iteration ->
+                // Tentukan warna titik berdasarkan halaman saat ini
+                val color =
+                    if (pagerState.currentPage == iteration) primaryColor else Color.LightGray
+                // Tentukan ukuran titik, yang aktif sedikit lebih besar
+                val size = if (pagerState.currentPage == iteration) 10.dp else 8.dp
+
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .size(size)
+                )
+            }
+        }
+        }
 }
 
 /**

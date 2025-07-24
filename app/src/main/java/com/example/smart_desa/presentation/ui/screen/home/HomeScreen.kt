@@ -4,9 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -334,23 +331,50 @@ fun BeritaSection() {
 
         // === CARD BERITA ===
         Card(
-            shape = RoundedCornerShape(16.dp), // Rounded corner
-            elevation = CardDefaults.cardElevation(4.dp), // Shadow elevation
-            colors = CardDefaults.cardColors(containerColor = Color.White), // Background putih
-            modifier = Modifier.clickable { /* TODO: Handle berita click */ } // Clickable card
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(4.dp),
+            modifier = Modifier.clickable { /* TODO: Handle berita click */ }
         ) {
-            // Gambar berita dengan styling
-            Image(
-                painter = painterResource(id = R.drawable.berita_subang), // Resource gambar berita
-                contentDescription = "Berita Kecelakaan", // Accessibility description
+            // 1. Bungkus Gambar dan Teks dalam sebuah Box
+            // Box memungkinkan elemen untuk ditumpuk di atas satu sama lain.
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth() // Lebar penuh card
-                    .height(180.dp), // Tinggi fixed 180dp
-                contentScale = ContentScale.Crop // Crop untuk maintain aspect ratio
-            )
-            // === OPTIONAL: JUDUL BERITA ===
-            // Anda bisa menambahkan judul berita di bawah gambar jika perlu
-            // Text(text = "Judul Berita", modifier = Modifier.padding(16.dp))
+                    .fillMaxWidth()
+                    .height(180.dp)
+            ) {
+                // 2. Gambar sebagai latar belakang, mengisi seluruh Box
+                Image(
+                    painter = painterResource(id = R.drawable.berita_subang),
+                    contentDescription = "Berita Kecelakaan",
+                    modifier = Modifier.fillMaxSize(), // Mengisi seluruh ukuran Box
+                    contentScale = ContentScale.Crop
+                )
+
+                // 3. Gradien overlay untuk meningkatkan keterbacaan teks
+                // Diletakkan di bagian bawah Box, di atas gambar.
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.8f)),
+                                startY = 300f // Mulai gradien dari tengah ke bawah
+                            )
+                        )
+                )
+
+                // 4. Teks Judul Berita
+                // Diletakkan di bagian bawah Box, di atas gradien.
+                Text(
+                    text = "Kecelakaan Maut di Jalur Pantura Subang, 2 Orang Meninggal Dunia",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart) // Posisi di kiri bawah
+                        .padding(16.dp) // Beri jarak dari tepi
+                )
+            }
         }
     }
 }

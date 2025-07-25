@@ -37,7 +37,8 @@ import com.example.smart_desa.R
 fun HomeScreen(
     onLogout: () -> Unit, // Aksi logout tetap ada jika dibutuhkan di tempat lain
     onNavigateToProfilDesa: () -> Unit,
-    onNavigateToBumdes: () -> Unit
+    onNavigateToBumdes: () -> Unit,
+    onNavigateToGaleri: () -> Unit
 ) {
 
 
@@ -73,7 +74,8 @@ fun HomeScreen(
             item {
                 MenuGridSection(
                     onNavigateToProfilDesa = onNavigateToProfilDesa,
-                    onNavigateToBumdes = onNavigateToBumdes
+                    onNavigateToBumdes = onNavigateToBumdes,
+                    onNavigateToGaleri = onNavigateToGaleri
                 ) // Composable untuk grid menu layanan
                 Spacer(modifier = Modifier.height(24.dp)) // Spacing setelah menu
             }
@@ -140,7 +142,8 @@ fun HomeHeader() {
 @Composable
 fun MenuGridSection(
     onNavigateToProfilDesa: () -> Unit,
-    onNavigateToBumdes: () -> Unit
+    onNavigateToBumdes: () -> Unit,
+    onNavigateToGaleri: () -> Unit
     ) {
     // === DEFINISI MENU ITEMS ===
     // List menu dengan title dan icon yang akan ditampilkan
@@ -182,6 +185,7 @@ fun MenuGridSection(
                                     when (item.title) {
                                         "Profil Desa" -> onNavigateToProfilDesa()
                                         "BUMDES" -> onNavigateToBumdes()
+                                        "Galeri" -> onNavigateToGaleri()
                                         else -> {
                                             // TODO: Handle menu click untuk item lainnya
                                         }

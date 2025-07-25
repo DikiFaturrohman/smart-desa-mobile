@@ -58,7 +58,8 @@ fun MainScreen(
      */
     onLogout: () -> Unit,
     onNavigateToProfilDesa: () -> Unit,
-    onNavigateToBumdes: () -> Unit
+    onNavigateToBumdes: () -> Unit,
+    onNavigateToGaleri: () -> Unit
 ) {
     /**
      * NavController khusus untuk mengelola navigasi bottom navigation bar
@@ -167,7 +168,8 @@ fun MainScreen(
                 HomeScreen(
                     onLogout = onLogout,
                     onNavigateToProfilDesa = onNavigateToProfilDesa,
-                    onNavigateToBumdes = onNavigateToBumdes
+                    onNavigateToBumdes = onNavigateToBumdes,
+                    onNavigateToGaleri = onNavigateToGaleri
                     )
             }
 

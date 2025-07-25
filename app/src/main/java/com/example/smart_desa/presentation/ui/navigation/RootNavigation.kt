@@ -10,6 +10,7 @@ import com.example.smart_desa.presentation.ui.screen.auth.forgotpassword.ForgotP
 import com.example.smart_desa.presentation.ui.screen.auth.login.LoginScreen
 import com.example.smart_desa.presentation.ui.screen.auth.register.RegisterScreen
 import com.example.smart_desa.presentation.ui.screen.bumdes.BumdesScreen
+import com.example.smart_desa.presentation.ui.screen.galeri.GaleriScreen
 import com.example.smart_desa.presentation.ui.screen.profildesa.ProfilDesaScreen
 import com.example.smart_desa.presentation.ui.screen.splash.SplashScreen
 
@@ -126,6 +127,9 @@ fun RootNavigation() {
                 },
                 onNavigateToBumdes = {
                     navController.navigate(Screen.Bumdes.route)
+                },
+                onNavigateToGaleri = {
+                    navController.navigate(Screen.Galeri.route)
                 }
             )
         }
@@ -144,5 +148,12 @@ fun RootNavigation() {
                 }
             )
         }
-    }
-}
+        composable(Screen.Galeri.route) {
+            GaleriScreen(
+                onBackPress = {
+                    navController.popBackStack()
+                }
+            )
+
+        }
+}}

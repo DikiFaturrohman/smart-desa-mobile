@@ -56,7 +56,10 @@ fun MainScreen(
      *
      * @param onLogout Lambda function yang akan dieksekusi saat logout
      */
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onNavigateToProfilDesa: () -> Unit,
+    onNavigateToBumdes: () -> Unit,
+    onNavigateToGaleri: () -> Unit
 ) {
     /**
      * NavController khusus untuk mengelola navigasi bottom navigation bar
@@ -162,7 +165,12 @@ fun MainScreen(
              * karena HomeScreen mungkin memiliki tombol logout
              */
             composable(Screen.Home.route) {
-                HomeScreen(onLogout = onLogout)
+                HomeScreen(
+                    onLogout = onLogout,
+                    onNavigateToProfilDesa = onNavigateToProfilDesa,
+                    onNavigateToBumdes = onNavigateToBumdes,
+                    onNavigateToGaleri = onNavigateToGaleri
+                    )
             }
 
             /**

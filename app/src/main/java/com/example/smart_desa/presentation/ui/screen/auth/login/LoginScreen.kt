@@ -47,6 +47,7 @@ import com.example.smart_desa.R
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToRegister: () -> Unit,
+    onNavigateToForgotPassword: () -> Unit,
     loginViewModel: LoginViewModel = viewModel()
 ) {
     // Mengobserve state dari ViewModel menggunakan collectAsState
@@ -181,7 +182,7 @@ fun LoginScreen(
                 // === FORGOT PASSWORD BUTTON ===
                 // Box untuk menampung tombol lupa password dengan alignment kanan
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-                    TextButton(onClick = { /* TODO: Handle Lupa Password */ }) {
+                    TextButton(onClick = { onNavigateToForgotPassword() }) {
                         Text("Lupa Kata Sandi?", color = Color.Gray)
                     }
                 }

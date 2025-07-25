@@ -4,10 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -36,8 +35,13 @@ import com.example.smart_desa.R
  */
 @Composable
 fun HomeScreen(
-    onLogout: () -> Unit // Aksi logout tetap ada jika dibutuhkan di tempat lain
+    onLogout: () -> Unit, // Aksi logout tetap ada jika dibutuhkan di tempat lain
+    onNavigateToProfilDesa: () -> Unit,
+    onNavigateToBumdes: () -> Unit,
+    onNavigateToGaleri: () -> Unit
 ) {
+
+
     // === DEFINISI WARNA ===
     val primaryColor = Color(0xFF00BFA5) // Warna hijau toska utama aplikasi
     val backgroundColor = Color(0xFF00BFA5) // Warna latar belakang sedikit hijau
@@ -68,7 +72,11 @@ fun HomeScreen(
 
             // === BAGIAN MENU GRID ===
             item {
-                MenuGridSection() // Composable untuk grid menu layanan
+                MenuGridSection(
+                    onNavigateToProfilDesa = onNavigateToProfilDesa,
+                    onNavigateToBumdes = onNavigateToBumdes,
+                    onNavigateToGaleri = onNavigateToGaleri
+                ) // Composable untuk grid menu layanan
                 Spacer(modifier = Modifier.height(24.dp)) // Spacing setelah menu
             }
 
@@ -132,7 +140,11 @@ fun HomeHeader() {
  * Menu ditampilkan dalam Card dengan arrangement grid custom (4 kolom per baris)
  */
 @Composable
-fun MenuGridSection() {
+fun MenuGridSection(
+    onNavigateToProfilDesa: () -> Unit,
+    onNavigateToBumdes: () -> Unit,
+    onNavigateToGaleri: () -> Unit
+    ) {
     // === DEFINISI MENU ITEMS ===
     // List menu dengan title dan icon yang akan ditampilkan
     val menuItems = listOf(
@@ -168,7 +180,17 @@ fun MenuGridSection() {
                         Box(modifier = Modifier.weight(1f)) { // Weight 1f untuk distribusi equal
                             MenuIconItem(
                                 menuItem = item,
-                                onClick = { /* TODO: Handle menu click */ }
+                                onClick = {
+                                    // UBAH LOGIKA onClick MENJADI SEPERTI INI
+                                    when (item.title) {
+                                        "Profil Desa" -> onNavigateToProfilDesa()
+                                        "BUMDES" -> onNavigateToBumdes()
+                                        "Galeri" -> onNavigateToGaleri()
+                                        else -> {
+                                            // TODO: Handle menu click untuk item lainnya
+                                        }
+                                    }
+                                }
                             )
                         }
                     }
@@ -234,6 +256,19 @@ fun MenuIconItem(menuItem: MenuItem, onClick: () -> Unit) {
  */
 @Composable
 fun InfoGrafisSection() {
+
+    val infografisItems = listOf(
+        R.drawable.infografis,
+        R.drawable.infograf,
+        R.drawable.info
+    )
+
+    val pagerState = rememberPagerState(pageCount = {
+        infografisItems.size
+    })
+
+    val primaryColor = Color(0xFF00BFA5)
+
     Column(modifier = Modifier.fillMaxWidth()) {
         // === JUDUL SECTION ===
         Text(
@@ -245,23 +280,59 @@ fun InfoGrafisSection() {
 
         Spacer(modifier = Modifier.height(12.dp)) // Spacing antara judul dan card
 
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = 8.dp), // Sedikit padding jika gambar terlalu ke tepi
+            pageSpacing = 16.dp // Jarak antar gambar saat digeser
+
         // === CARD INFOGRAFIS ===
-        Card(
-            shape = RoundedCornerShape(16.dp), // Rounded corner
-            elevation = CardDefaults.cardElevation(4.dp) // Shadow elevation
-        ) {
-            // Gambar infografis dengan styling
-            Image(
-                painter = painterResource(id = R.drawable.infografis), // Resource gambar
-                contentDescription = "Info Grafis Vaksinasi", // Accessibility description
-                modifier = Modifier
-                    .fillMaxWidth() // Lebar penuh card
-                    .height(150.dp) // Tinggi fixed 150dp
-                    .clip(RoundedCornerShape(16.dp)), // Clipping sesuai card shape
-                contentScale = ContentScale.Crop // Crop untuk maintain aspect ratio
-            )
+        ) { page ->
+            // Setiap item di dalam Pager adalah sebuah Card
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Image(
+                    painter = painterResource(id = infografisItems[page]), // Ambil gambar sesuai halaman
+                    contentDescription = "Info Grafis ${page + 1}",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
-    }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // 4. Indikator halaman (titik-titik) di bawah carousel
+        Row(
+            Modifier
+                .height(20.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            // Ulangi sebanyak jumlah gambar
+            repeat(pagerState.pageCount) { iteration ->
+                // Tentukan warna titik berdasarkan halaman saat ini
+                val color =
+                    if (pagerState.currentPage == iteration) primaryColor else Color.LightGray
+                // Tentukan ukuran titik, yang aktif sedikit lebih besar
+                val size = if (pagerState.currentPage == iteration) 10.dp else 8.dp
+
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .size(size)
+                )
+            }
+        }
+        }
 }
 
 /**
@@ -283,23 +354,50 @@ fun BeritaSection() {
 
         // === CARD BERITA ===
         Card(
-            shape = RoundedCornerShape(16.dp), // Rounded corner
-            elevation = CardDefaults.cardElevation(4.dp), // Shadow elevation
-            colors = CardDefaults.cardColors(containerColor = Color.White), // Background putih
-            modifier = Modifier.clickable { /* TODO: Handle berita click */ } // Clickable card
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(4.dp),
+            modifier = Modifier.clickable { /* TODO: Handle berita click */ }
         ) {
-            // Gambar berita dengan styling
-            Image(
-                painter = painterResource(id = R.drawable.berita_subang), // Resource gambar berita
-                contentDescription = "Berita Kecelakaan", // Accessibility description
+            // 1. Bungkus Gambar dan Teks dalam sebuah Box
+            // Box memungkinkan elemen untuk ditumpuk di atas satu sama lain.
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth() // Lebar penuh card
-                    .height(180.dp), // Tinggi fixed 180dp
-                contentScale = ContentScale.Crop // Crop untuk maintain aspect ratio
-            )
-            // === OPTIONAL: JUDUL BERITA ===
-            // Anda bisa menambahkan judul berita di bawah gambar jika perlu
-            // Text(text = "Judul Berita", modifier = Modifier.padding(16.dp))
+                    .fillMaxWidth()
+                    .height(180.dp)
+            ) {
+                // 2. Gambar sebagai latar belakang, mengisi seluruh Box
+                Image(
+                    painter = painterResource(id = R.drawable.berita_subang),
+                    contentDescription = "Berita Kecelakaan",
+                    modifier = Modifier.fillMaxSize(), // Mengisi seluruh ukuran Box
+                    contentScale = ContentScale.Crop
+                )
+
+                // 3. Gradien overlay untuk meningkatkan keterbacaan teks
+                // Diletakkan di bagian bawah Box, di atas gambar.
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.8f)),
+                                startY = 300f // Mulai gradien dari tengah ke bawah
+                            )
+                        )
+                )
+
+                // 4. Teks Judul Berita
+                // Diletakkan di bagian bawah Box, di atas gradien.
+                Text(
+                    text = "Kecelakaan Maut di Jalur Pantura Subang, 2 Orang Meninggal Dunia",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart) // Posisi di kiri bawah
+                        .padding(16.dp) // Beri jarak dari tepi
+                )
+            }
         }
     }
 }

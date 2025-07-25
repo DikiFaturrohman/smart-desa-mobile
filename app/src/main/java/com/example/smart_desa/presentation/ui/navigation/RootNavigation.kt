@@ -6,8 +6,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.smart_desa.presentation.MainScreen
 import com.example.smart_desa.presentation.navigation.Screen
+import com.example.smart_desa.presentation.ui.screen.auth.forgotpassword.ForgotPasswordScreen
 import com.example.smart_desa.presentation.ui.screen.auth.login.LoginScreen
 import com.example.smart_desa.presentation.ui.screen.auth.register.RegisterScreen
+import com.example.smart_desa.presentation.ui.screen.bumdes.BumdesScreen
+import com.example.smart_desa.presentation.ui.screen.galeri.GaleriScreen
+import com.example.smart_desa.presentation.ui.screen.profildesa.ProfilDesaScreen
 import com.example.smart_desa.presentation.ui.screen.splash.SplashScreen
 
 /**
@@ -57,21 +61,17 @@ fun RootNavigation() {
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
-                    // === NAVIGATION LOGIC: LOGIN SUCCESS TO MAIN ===
-                    // Navigasi ke MainScreen setelah login berhasil
-                    // popUpTo dengan inclusive=true menghapus login screen dari back stack
-                    // Ini mencegah user kembali ke login screen dengan back button
-                    // setelah sudah login (security measure)
                     navController.navigate(Screen.Main.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 },
                 onNavigateToRegister = {
-                    // === NAVIGATION LOGIC: LOGIN TO REGISTER ===
-                    // Navigasi ke RegisterScreen untuk user yang belum punya akun
-                    // Tidak menggunakan popUpTo, sehingga login screen tetap di back stack
-                    // User bisa kembali ke login screen dengan back button
                     navController.navigate(Screen.Register.route)
+                },
+                // Tambahkan callback dan aksinya di sini
+                onNavigateToForgotPassword = {
+                    // Navigasi ke halaman lupa sandi
+                    navController.navigate(Screen.ForgotPassword.route)
                 }
             )
         }
@@ -96,6 +96,18 @@ fun RootNavigation() {
             )
         }
 
+        // ==========================================================
+        // === FORGOT PASSWORD SCREEN DESTINATION ===
+        // Layar untuk mereset password melalui nomor telepon
+        composable(Screen.ForgotPassword.route) {
+                ForgotPasswordScreen(
+                onBackPress = {
+                    // Aksi saat tombol kembali ditekan adalah kembali ke layar sebelumnya (Login)
+                    navController.popBackStack()
+                }
+            )
+        }
+
         // === MAIN SCREEN DESTINATION ===
         // Layar utama aplikasi yang berisi home screen dan fitur-fitur utama
         composable(Screen.Main.route) {
@@ -109,8 +121,39 @@ fun RootNavigation() {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Main.route) { inclusive = true }
                     }
+                },
+                onNavigateToProfilDesa = {
+                    navController.navigate(Screen.ProfilDesa.route)
+                },
+                onNavigateToBumdes = {
+                    navController.navigate(Screen.Bumdes.route)
+                },
+                onNavigateToGaleri = {
+                    navController.navigate(Screen.Galeri.route)
                 }
             )
         }
-    }
-}
+
+        composable(Screen.ProfilDesa.route) {
+            ProfilDesaScreen(
+                onBackPress = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Screen.Bumdes.route) {
+            BumdesScreen(
+                onBackPress = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Screen.Galeri.route) {
+            GaleriScreen(
+                onBackPress = {
+                    navController.popBackStack()
+                }
+            )
+
+        }
+}}

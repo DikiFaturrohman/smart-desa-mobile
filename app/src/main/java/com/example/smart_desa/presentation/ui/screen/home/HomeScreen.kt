@@ -152,9 +152,9 @@ fun MenuGridSection(
     // List menu dengan title dan icon yang akan ditampilkan
     val menuItems = listOf(
         MenuItem("Profil Desa", Icons.Default.AccountBalance),
-        MenuItem("Potensi Desa", Icons.Default.Landscape),
-        MenuItem("Program Desa", Icons.Default.Event),
-        MenuItem("Pemerintah Desa", Icons.Default.Groups),
+        MenuItem("Informasi", Icons.Default.Info),
+        MenuItem("Agenda", Icons.Default.Event),
+        MenuItem("Download", Icons.Default.Download),
         MenuItem("Unggah Dokumen", Icons.Default.CloudUpload),
         MenuItem("BUMDES", Icons.Default.Store),
         MenuItem("Galeri", Icons.Default.PhotoLibrary)

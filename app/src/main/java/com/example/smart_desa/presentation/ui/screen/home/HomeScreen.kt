@@ -36,7 +36,8 @@ import com.example.smart_desa.R
 @Composable
 fun HomeScreen(
     onLogout: () -> Unit, // Aksi logout tetap ada jika dibutuhkan di tempat lain
-    onNavigateToProfilDesa: () -> Unit
+    onNavigateToProfilDesa: () -> Unit,
+    onNavigateToBumdes: () -> Unit
 ) {
 
 
@@ -70,7 +71,10 @@ fun HomeScreen(
 
             // === BAGIAN MENU GRID ===
             item {
-                MenuGridSection(onNavigateToProfilDesa = onNavigateToProfilDesa) // Composable untuk grid menu layanan
+                MenuGridSection(
+                    onNavigateToProfilDesa = onNavigateToProfilDesa,
+                    onNavigateToBumdes = onNavigateToBumdes
+                ) // Composable untuk grid menu layanan
                 Spacer(modifier = Modifier.height(24.dp)) // Spacing setelah menu
             }
 
@@ -134,7 +138,10 @@ fun HomeHeader() {
  * Menu ditampilkan dalam Card dengan arrangement grid custom (4 kolom per baris)
  */
 @Composable
-fun MenuGridSection(onNavigateToProfilDesa: () -> Unit) {
+fun MenuGridSection(
+    onNavigateToProfilDesa: () -> Unit,
+    onNavigateToBumdes: () -> Unit
+    ) {
     // === DEFINISI MENU ITEMS ===
     // List menu dengan title dan icon yang akan ditampilkan
     val menuItems = listOf(
@@ -171,12 +178,15 @@ fun MenuGridSection(onNavigateToProfilDesa: () -> Unit) {
                             MenuIconItem(
                                 menuItem = item,
                                 onClick = {
-                                    // Tambahkan logika ini
-                                    if (item.title == "Profil Desa") {
-                                        onNavigateToProfilDesa()
-                                    } else {
-                                        // TODO: Handle menu click untuk item lainnya
-                                    }}
+                                    // UBAH LOGIKA onClick MENJADI SEPERTI INI
+                                    when (item.title) {
+                                        "Profil Desa" -> onNavigateToProfilDesa()
+                                        "BUMDES" -> onNavigateToBumdes()
+                                        else -> {
+                                            // TODO: Handle menu click untuk item lainnya
+                                        }
+                                    }
+                                }
                             )
                         }
                     }

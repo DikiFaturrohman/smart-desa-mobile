@@ -38,7 +38,8 @@ fun HomeScreen(
     onLogout: () -> Unit, // Aksi logout tetap ada jika dibutuhkan di tempat lain
     onNavigateToProfilDesa: () -> Unit,
     onNavigateToBumdes: () -> Unit,
-    onNavigateToGaleri: () -> Unit
+    onNavigateToGaleri: () -> Unit,
+    onNavigateToUnggahDokumen: () -> Unit
 ) {
 
 
@@ -75,7 +76,8 @@ fun HomeScreen(
                 MenuGridSection(
                     onNavigateToProfilDesa = onNavigateToProfilDesa,
                     onNavigateToBumdes = onNavigateToBumdes,
-                    onNavigateToGaleri = onNavigateToGaleri
+                    onNavigateToGaleri = onNavigateToGaleri,
+                    onNavigateToUnggahDokumen = onNavigateToUnggahDokumen
                 ) // Composable untuk grid menu layanan
                 Spacer(modifier = Modifier.height(24.dp)) // Spacing setelah menu
             }
@@ -143,7 +145,8 @@ fun HomeHeader() {
 fun MenuGridSection(
     onNavigateToProfilDesa: () -> Unit,
     onNavigateToBumdes: () -> Unit,
-    onNavigateToGaleri: () -> Unit
+    onNavigateToGaleri: () -> Unit,
+    onNavigateToUnggahDokumen: () -> Unit
     ) {
     // === DEFINISI MENU ITEMS ===
     // List menu dengan title dan icon yang akan ditampilkan
@@ -186,6 +189,7 @@ fun MenuGridSection(
                                         "Profil Desa" -> onNavigateToProfilDesa()
                                         "BUMDES" -> onNavigateToBumdes()
                                         "Galeri" -> onNavigateToGaleri()
+                                        "Unggah Dokumen" -> onNavigateToUnggahDokumen()
                                         else -> {
                                             // TODO: Handle menu click untuk item lainnya
                                         }

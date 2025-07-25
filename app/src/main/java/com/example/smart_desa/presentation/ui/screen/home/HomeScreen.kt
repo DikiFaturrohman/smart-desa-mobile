@@ -35,8 +35,11 @@ import com.example.smart_desa.R
  */
 @Composable
 fun HomeScreen(
-    onLogout: () -> Unit // Aksi logout tetap ada jika dibutuhkan di tempat lain
+    onLogout: () -> Unit, // Aksi logout tetap ada jika dibutuhkan di tempat lain
+    onNavigateToProfilDesa: () -> Unit
 ) {
+
+
     // === DEFINISI WARNA ===
     val primaryColor = Color(0xFF00BFA5) // Warna hijau toska utama aplikasi
     val backgroundColor = Color(0xFF00BFA5) // Warna latar belakang sedikit hijau
@@ -67,7 +70,7 @@ fun HomeScreen(
 
             // === BAGIAN MENU GRID ===
             item {
-                MenuGridSection() // Composable untuk grid menu layanan
+                MenuGridSection(onNavigateToProfilDesa = onNavigateToProfilDesa) // Composable untuk grid menu layanan
                 Spacer(modifier = Modifier.height(24.dp)) // Spacing setelah menu
             }
 
@@ -131,7 +134,7 @@ fun HomeHeader() {
  * Menu ditampilkan dalam Card dengan arrangement grid custom (4 kolom per baris)
  */
 @Composable
-fun MenuGridSection() {
+fun MenuGridSection(onNavigateToProfilDesa: () -> Unit) {
     // === DEFINISI MENU ITEMS ===
     // List menu dengan title dan icon yang akan ditampilkan
     val menuItems = listOf(
@@ -167,7 +170,13 @@ fun MenuGridSection() {
                         Box(modifier = Modifier.weight(1f)) { // Weight 1f untuk distribusi equal
                             MenuIconItem(
                                 menuItem = item,
-                                onClick = { /* TODO: Handle menu click */ }
+                                onClick = {
+                                    // Tambahkan logika ini
+                                    if (item.title == "Profil Desa") {
+                                        onNavigateToProfilDesa()
+                                    } else {
+                                        // TODO: Handle menu click untuk item lainnya
+                                    }}
                             )
                         }
                     }

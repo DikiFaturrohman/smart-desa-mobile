@@ -5,6 +5,7 @@ sealed class Screen(val route: String) {
     object Login : Screen("login_screen")
     object Register : Screen("register_screen")
     data object ForgotPassword : Screen("forgot_password_screen")
+    data object ProfilDesa : Screen("profil_desa_screen")
 
     // Rute untuk alur utama setelah login (termasuk bottom nav)
     object Main : Screen("main_screen")

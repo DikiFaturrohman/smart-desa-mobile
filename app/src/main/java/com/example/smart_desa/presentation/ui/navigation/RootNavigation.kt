@@ -9,6 +9,7 @@ import com.example.smart_desa.presentation.navigation.Screen
 import com.example.smart_desa.presentation.ui.screen.auth.forgotpassword.ForgotPasswordScreen
 import com.example.smart_desa.presentation.ui.screen.auth.login.LoginScreen
 import com.example.smart_desa.presentation.ui.screen.auth.register.RegisterScreen
+import com.example.smart_desa.presentation.ui.screen.profildesa.ProfilDesaScreen
 import com.example.smart_desa.presentation.ui.screen.splash.SplashScreen
 
 /**
@@ -97,7 +98,7 @@ fun RootNavigation() {
         // === FORGOT PASSWORD SCREEN DESTINATION ===
         // Layar untuk mereset password melalui nomor telepon
         composable(Screen.ForgotPassword.route) {
-            ForgotPasswordScreen(
+                ForgotPasswordScreen(
                 onBackPress = {
                     // Aksi saat tombol kembali ditekan adalah kembali ke layar sebelumnya (Login)
                     navController.popBackStack()
@@ -118,6 +119,17 @@ fun RootNavigation() {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Main.route) { inclusive = true }
                     }
+                },
+                onNavigateToProfilDesa = {
+                    navController.navigate(Screen.ProfilDesa.route)
+                }
+            )
+        }
+
+        composable(Screen.ProfilDesa.route) {
+            ProfilDesaScreen(
+                onBackPress = {
+                    navController.popBackStack()
                 }
             )
         }

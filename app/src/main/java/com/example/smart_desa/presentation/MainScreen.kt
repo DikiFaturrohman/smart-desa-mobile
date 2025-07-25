@@ -181,7 +181,7 @@ fun MainScreen(
              * Screen untuk menampilkan dan mengedit profil user
              */
             composable(Screen.Profile.route) {
-                ProfileScreen()
+                ProfileScreen(onLogout = onLogout)
             }
 
             /**

@@ -8,6 +8,7 @@ sealed class Screen(val route: String) {
     data object ProfilDesa : Screen("profil_desa_screen")
     data object Bumdes : Screen("bumdes_screen")
     data object Galeri : Screen("galeri_screen")
+    data object UnggahDokumen : Screen("unggah_dokumen_screen")
 
     // Rute untuk alur utama setelah login (termasuk bottom nav)
     object Main : Screen("main_screen")

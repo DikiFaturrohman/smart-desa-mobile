@@ -10,6 +10,10 @@ sealed class Screen(val route: String) {
     data object Galeri : Screen("galeri_screen")
     data object UnggahDokumen : Screen("unggah_dokumen_screen")
 
+    data object ProgressPemohon: Screen("progress_pemohon_screen/{pengajuanId}") {
+        fun createRoute(pengajuanId: Int) = "progress_pemohon_screen/$pengajuanId"
+    }
+
     // Rute untuk alur utama setelah login (termasuk bottom nav)
     object Main : Screen("main_screen")
 

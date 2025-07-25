@@ -1,9 +1,11 @@
 package com.example.smart_desa.presentation.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.smart_desa.presentation.MainScreen
 import com.example.smart_desa.presentation.navigation.Screen
 import com.example.smart_desa.presentation.ui.screen.auth.forgotpassword.ForgotPasswordScreen
@@ -12,6 +14,7 @@ import com.example.smart_desa.presentation.ui.screen.auth.register.RegisterScree
 import com.example.smart_desa.presentation.ui.screen.bumdes.BumdesScreen
 import com.example.smart_desa.presentation.ui.screen.dokumen.UnggahDokumenScreen
 import com.example.smart_desa.presentation.ui.screen.galeri.GaleriScreen
+import com.example.smart_desa.presentation.ui.screen.pengajuan.ProgressPemohonScreen
 import com.example.smart_desa.presentation.ui.screen.profildesa.ProfilDesaScreen
 import com.example.smart_desa.presentation.ui.screen.splash.SplashScreen
 
@@ -134,6 +137,9 @@ fun RootNavigation() {
                 },
                 onNavigateToUnggahDokumen = {
                     navController.navigate(Screen.UnggahDokumen.route)
+                },
+                onNavigateToDetailPengajuan = { id ->
+                    navController.navigate(Screen.ProgressPemohon.createRoute(id))
                 }
             )
         }
@@ -167,4 +173,17 @@ fun RootNavigation() {
                 }
             )
 
-        }}}
+        }
+        composable(
+            route = Screen.ProgressPemohon.route,
+            arguments = listOf(navArgument("pengajuanId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val pengajuanId = backStackEntry.arguments?.getInt("pengajuanId") ?: -1
+            ProgressPemohonScreen(
+                pengajuanId = pengajuanId,
+                onBackPress = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        }}

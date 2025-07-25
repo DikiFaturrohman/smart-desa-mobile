@@ -60,7 +60,8 @@ fun MainScreen(
     onNavigateToProfilDesa: () -> Unit,
     onNavigateToBumdes: () -> Unit,
     onNavigateToGaleri: () -> Unit,
-    onNavigateToUnggahDokumen: () -> Unit
+    onNavigateToUnggahDokumen: () -> Unit,
+    onNavigateToDetailPengajuan: (Int) -> Unit
 ) {
     /**
      * NavController khusus untuk mengelola navigasi bottom navigation bar
@@ -193,7 +194,11 @@ fun MainScreen(
              * Definisi route untuk Pengajuan screen
              * Screen untuk melihat dan mengelola pengajuan yang telah dibuat user
              */
-            composable(Screen.Pengajuan.route) { PengajuanScreen() }
+            composable(Screen.Pengajuan.route) {
+                PengajuanScreen(
+                    onNavigateToDetail = onNavigateToDetailPengajuan // TERUSKAN CALLBACK
+                )
+            }
         }
     }
 }

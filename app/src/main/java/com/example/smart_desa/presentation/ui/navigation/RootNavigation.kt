@@ -16,6 +16,7 @@ import com.example.smart_desa.presentation.ui.screen.dokumen.UnggahDokumenScreen
 import com.example.smart_desa.presentation.ui.screen.galeri.GaleriScreen
 import com.example.smart_desa.presentation.ui.screen.pengajuan.ProgressPemohonScreen
 import com.example.smart_desa.presentation.ui.screen.profildesa.ProfilDesaScreen
+import com.example.smart_desa.presentation.ui.screen.profile.EditProfileScreen
 import com.example.smart_desa.presentation.ui.screen.splash.SplashScreen
 
 /**
@@ -138,6 +139,9 @@ fun RootNavigation() {
                 onNavigateToUnggahDokumen = {
                     navController.navigate(Screen.UnggahDokumen.route)
                 },
+                onNavigateToEditProfile = {
+                    navController.navigate(Screen.EditProfile.route)
+                },
                 onNavigateToDetailPengajuan = { id ->
                     navController.navigate(Screen.ProgressPemohon.createRoute(id))
                 }
@@ -182,6 +186,17 @@ fun RootNavigation() {
             ProgressPemohonScreen(
                 pengajuanId = pengajuanId,
                 onBackPress = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Screen.EditProfile.route) {
+            EditProfileScreen(
+                onBackPress = {
+                    navController.popBackStack()
+                },
+                onSave = {
+                    // Setelah menyimpan, kembali ke halaman sebelumnya
                     navController.popBackStack()
                 }
             )

@@ -36,7 +36,8 @@ data class UserData(
 
 @Composable
 fun ProfileScreen(
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onNavigateToEditProfile: () -> Unit
 ) {
     // Data pengguna (sementara menggunakan data palsu/mock)
     val user = UserData(
@@ -105,8 +106,7 @@ fun ProfileScreen(
                     // Tombol Edit Profil
                     Button(
                         onClick = {
-                            Toast.makeText(context, "Membuka halaman edit profil...", Toast.LENGTH_SHORT).show()
-                            // TODO: Navigasi ke halaman edit profil
+                            onNavigateToEditProfile()
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BFA5)),

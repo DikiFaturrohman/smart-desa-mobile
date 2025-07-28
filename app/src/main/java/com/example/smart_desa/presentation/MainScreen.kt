@@ -61,6 +61,7 @@ fun MainScreen(
     onNavigateToBumdes: () -> Unit,
     onNavigateToGaleri: () -> Unit,
     onNavigateToUnggahDokumen: () -> Unit,
+    onNavigateToEditProfile: () -> Unit,
     onNavigateToDetailPengajuan: (Int) -> Unit
 ) {
     /**
@@ -181,7 +182,8 @@ fun MainScreen(
              * Screen untuk menampilkan dan mengedit profil user
              */
             composable(Screen.Profile.route) {
-                ProfileScreen(onLogout = onLogout)
+                ProfileScreen(onLogout = onLogout,
+                    onNavigateToEditProfile = onNavigateToEditProfile)
             }
 
             /**

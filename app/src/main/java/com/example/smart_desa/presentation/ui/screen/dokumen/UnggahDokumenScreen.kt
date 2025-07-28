@@ -29,8 +29,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 
 /**
- * Halaman untuk mengunggah dokumen seperti KTP dan KK.
- *
  * @param onBackPress Callback untuk kembali ke halaman sebelumnya.
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -136,8 +134,6 @@ fun UnggahDokumenScreen(
 }
 
 /**
- * Composable reusable untuk area unggah dokumen.
- *
  * @param title Judul area unggah (e.g., "Foto KTP").
  * @param imageUri URI dari gambar yang dipilih untuk pratinjau.
  * @param onSelectClick Aksi yang dijalankan saat tombol pilih file diklik.

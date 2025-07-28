@@ -32,12 +32,9 @@ import androidx.compose.ui.unit.sp
 import com.example.smart_desa.R
 
 /**
- * Composable utama untuk halaman registrasi/pendaftaran akun baru
- * Menggunakan Scaffold untuk layout yang konsisten dengan TopAppBar
- * Form menggunakan LazyColumn untuk handling content yang panjang dan scrollable
- *
- * @param onRegisterSuccess Callback yang dipanggil ketika registrasi berhasil
- * @param onBackPress Callback untuk navigasi kembali ke halaman sebelumnya
+ * Halaman registrasi dengan berbagai input field dan validasi data.
+ * @param onRegisterSuccess Aksi setelah registrasi berhasil.
+ * @param onBackPress Aksi untuk kembali ke layar sebelumnya.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +42,7 @@ fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
     onBackPress: () -> Unit
 ) {
-    // === STATE MANAGEMENT UNTUK FORM FIELDS ===
+    // State untuk input form
     var nik by remember { mutableStateOf("") }
     var namaLengkap by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -56,7 +53,7 @@ fun RegisterScreen(
     var tanggalLahir by remember { mutableStateOf("") }
     var selectedDesa by remember { mutableStateOf("") }
 
-    // === STATE MANAGEMENT UNTUK VALIDATION ERRORS ===
+    // State untuk pesan error validasi
     var nikError by remember { mutableStateOf<String?>(null) }
     var namaLengkapError by remember { mutableStateOf<String?>(null) }
     var emailError by remember { mutableStateOf<String?>(null) }
@@ -68,13 +65,13 @@ fun RegisterScreen(
     var desaError by remember { mutableStateOf<String?>(null) }
 
 
-    // === CONTEXT DAN STYLING ===
+
     val context = LocalContext.current
     val primaryColor = Color(0xFF00BFA5)
 
-    // === FUNGSI VALIDASI ===
+    // Fungsi untuk memvalidasi semua input sebelum submit
     fun validate(): Boolean {
-        // Reset semua error sebelum validasi ulang
+        // Reset semua error
         nikError = null
         namaLengkapError = null
         emailError = null
@@ -304,17 +301,7 @@ fun RegisterScreen(
     }
 }
 
-/**
- * Composable terpisah untuk input field agar tidak berulang
- *
- * @param label Label yang ditampilkan di atas field
- * @param value Nilai current dari field
- * @param placeholder Placeholder text untuk field
- * @param onValueChange Callback ketika nilai field berubah
- * @param isPassword Flag untuk menentukan apakah field adalah password
- * @param error Pesan error untuk ditampilkan jika ada
- * @param keyboardOptions Opsi keyboard untuk TextField
- */
+// Komponen input teks yang dapat digunakan kembali untuk form.
 @Composable
 private fun FormInputField(
     label: String,
@@ -375,7 +362,6 @@ private fun FormInputField(
             keyboardOptions = keyboardOptions
         )
 
-        // Tampilkan pesan error jika ada
         if (error != null) {
             Text(
                 text = error,
@@ -390,13 +376,7 @@ private fun FormInputField(
 }
 
 
-/**
- * Composable terpisah untuk dropdown field pilihan desa
- *
- * @param selectedText Text yang currently selected
- * @param onDesaSelected Callback ketika desa dipilih
- * @param error Pesan error untuk ditampilkan jika ada
- */
+// Komponen dropdown yang dapat digunakan untuk form.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DesaDropdownField(
@@ -463,7 +443,7 @@ private fun DesaDropdownField(
                 }
             }
         }
-        // Tampilkan pesan error jika ada
+
         if (error != null) {
             Text(
                 text = error,

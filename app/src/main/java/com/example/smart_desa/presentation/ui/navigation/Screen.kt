@@ -9,6 +9,7 @@ sealed class Screen(val route: String) {
     data object Bumdes : Screen("bumdes_screen")
     data object Galeri : Screen("galeri_screen")
     data object UnggahDokumen : Screen("unggah_dokumen_screen")
+    data object EditProfile : Screen("edit_profile_screen")
 
     data object ProgressPemohon: Screen("progress_pemohon_screen/{pengajuanId}") {
         fun createRoute(pengajuanId: Int) = "progress_pemohon_screen/$pengajuanId"

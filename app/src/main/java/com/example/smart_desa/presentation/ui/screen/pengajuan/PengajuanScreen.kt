@@ -27,8 +27,6 @@ import com.example.smart_desa.presentation.ui.screen.home.HomeHeader
 fun PengajuanScreen(
     onNavigateToDetail: (pengajuanId: Int) -> Unit
 ) {
-    // Gunakan mutableState untuk data, agar bisa diubah (misal: setelah fetch dari API)
-    // Untuk contoh, kita isi dengan data palsu. Kosongkan list ini untuk melihat empty state.
     var daftarPengajuan by remember {
         mutableStateOf(
             listOf(

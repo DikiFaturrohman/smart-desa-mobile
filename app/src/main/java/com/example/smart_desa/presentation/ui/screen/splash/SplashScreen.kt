@@ -19,12 +19,16 @@ import androidx.compose.ui.unit.dp
 import com.example.smart_desa.R
 import kotlinx.coroutines.delay
 
+/**
+ * Layar pembuka (splash screen) yang tampil selama 2 detik.
+ * @param onTimeout Aksi yang dijalankan setelah durasi selesai.
+ */
 @Composable
 fun SplashScreen(onTimeout: () -> Unit) {
-    // Efek ini akan berjalan sekali saat composable pertama kali ditampilkan
+    // Jalankan aksi setelah 2 detik
     LaunchedEffect(true) {
-        delay(2000L) // Tahan selama 2 detik
-        onTimeout()  // Panggil aksi setelah timeout
+        delay(2000L)
+        onTimeout()
     }
 
     Box(
@@ -41,10 +45,10 @@ fun SplashScreen(onTimeout: () -> Unit) {
             painter = painterResource(id = R.drawable.lambang_kabupaten_subang), // Panggil logo asli
             contentDescription = "Logo",
             modifier = Modifier
-                .size(160.dp) // Ukuran total lingkaran putih
-                .clip(CircleShape) // Buat bentuknya menjadi lingkaran
-                .background(Color.White) // Beri latar belakang putih
-                .padding(30.dp) // Beri padding di dalam lingkaran agar logo tidak menempel
+                .size(160.dp)
+                .clip(CircleShape)
+                .background(Color.White)
+                .padding(30.dp)
         )
     }
 }

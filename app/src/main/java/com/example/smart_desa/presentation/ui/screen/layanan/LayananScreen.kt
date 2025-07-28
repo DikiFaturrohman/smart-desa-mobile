@@ -40,7 +40,6 @@ data class Layanan(
 )
 
 /**
- * Composable utama untuk halaman Layanan.
  * Menampilkan daftar layanan administrasi yang tersedia di desa.
  */
 @Composable

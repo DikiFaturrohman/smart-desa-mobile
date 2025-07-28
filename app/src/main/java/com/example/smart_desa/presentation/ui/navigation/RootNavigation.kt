@@ -16,43 +16,24 @@ import com.example.smart_desa.presentation.ui.screen.dokumen.UnggahDokumenScreen
 import com.example.smart_desa.presentation.ui.screen.galeri.GaleriScreen
 import com.example.smart_desa.presentation.ui.screen.pengajuan.ProgressPemohonScreen
 import com.example.smart_desa.presentation.ui.screen.profildesa.ProfilDesaScreen
+import com.example.smart_desa.presentation.ui.screen.profile.EditProfileScreen
 import com.example.smart_desa.presentation.ui.screen.splash.SplashScreen
 
-/**
- * Composable utama untuk sistem navigasi aplikasi Smart Desa
- *
- * Fungsi ini mengelola navigasi antar layar dalam aplikasi dengan menggunakan
- * Jetpack Navigation Compose. Mengatur alur navigasi dari splash screen,
- * proses authentication, hingga main screen dengan proper back stack management.
- *
- * Navigation Flow:
- * 1. SplashScreen -> LoginScreen (clear back stack)
- * 2. LoginScreen -> RegisterScreen (add to back stack)
- * 3. LoginScreen -> MainScreen (clear back stack)
- * 4. RegisterScreen -> LoginScreen (pop back stack)
- * 5. MainScreen -> LoginScreen (clear back stack for logout)
- */
+// Mengelola seluruh alur navigasi aplikasi menggunakan Jetpack Navigation.
 @Composable
 fun RootNavigation() {
-    // === NAVIGATION CONTROLLER INITIALIZATION ===
-    // rememberNavController() membuat NavController yang survive recomposition
-    // NavController mengelola navigation state dan back stack
+
+
     val navController = rememberNavController()
 
-    // === NAV HOST SETUP ===
-    // NavHost adalah container utama yang menampung semua destination
-    // startDestination menentukan layar pertama yang ditampilkan saat app dibuka
+
     NavHost(navController = navController, startDestination = "splash_screen") {
 
-        // === SPLASH SCREEN DESTINATION ===
-        // Layar pembuka aplikasi yang ditampilkan saat pertama kali membuka app
+        // Layar pembuka aplikasi
         composable("splash_screen") {
             SplashScreen(
                 onTimeout = {
-                    // === NAVIGATION LOGIC: SPLASH TO LOGIN ===
-                    // Setelah timeout splash screen, navigasi ke Login screen
-                    // popUpTo dengan inclusive=true menghapus splash_screen dari back stack
-                    // Ini mencegah user kembali ke splash screen dengan back button
+                    // Arahkan ke Login setelah splash, hapus splash dari back stack
                     navController.navigate(Screen.Login.route) {
                         popUpTo("splash_screen") { inclusive = true }
                     }
@@ -60,8 +41,7 @@ fun RootNavigation() {
             )
         }
 
-        // === LOGIN SCREEN DESTINATION ===
-        // Layar authentication untuk user login menggunakan NIK dan password
+        // Alur autentikasi (Login, Register, Lupa Password)
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
@@ -72,56 +52,37 @@ fun RootNavigation() {
                 onNavigateToRegister = {
                     navController.navigate(Screen.Register.route)
                 },
-                // Tambahkan callback dan aksinya di sini
                 onNavigateToForgotPassword = {
-                    // Navigasi ke halaman lupa sandi
                     navController.navigate(Screen.ForgotPassword.route)
                 }
             )
         }
 
-        // === REGISTER SCREEN DESTINATION ===
-        // Layar pendaftaran akun baru untuk user yang belum memiliki akun
         composable(Screen.Register.route) {
             RegisterScreen(
                 onRegisterSuccess = {
-                    // === NAVIGATION LOGIC: REGISTER SUCCESS BACK TO LOGIN ===
-                    // Kembali ke layar login setelah registrasi berhasil
-                    // popBackStack() menghapus register screen dari back stack
-                    // dan kembali ke destination sebelumnya (login screen)
+                    // Kembali ke Login setelah sukses
                     navController.popBackStack()
                 },
                 onBackPress = {
-                    // === NAVIGATION LOGIC: BACK BUTTON PRESSED ===
-                    // Menangani aksi back button di register screen
-                    // popBackStack() kembali ke login screen
                     navController.popBackStack()
                 }
             )
         }
 
-        // ==========================================================
-        // === FORGOT PASSWORD SCREEN DESTINATION ===
-        // Layar untuk mereset password melalui nomor telepon
         composable(Screen.ForgotPassword.route) {
                 ForgotPasswordScreen(
                 onBackPress = {
-                    // Aksi saat tombol kembali ditekan adalah kembali ke layar sebelumnya (Login)
                     navController.popBackStack()
                 }
             )
         }
 
-        // === MAIN SCREEN DESTINATION ===
-        // Layar utama aplikasi yang berisi home screen dan fitur-fitur utama
+        // Layar utama setelah pengguna login (termasuk bottom navigation)
         composable(Screen.Main.route) {
             MainScreen(
                 onLogout = {
-                    // === NAVIGATION LOGIC: LOGOUT TO LOGIN ===
-                    // Navigasi kembali ke layar Login saat user logout
-                    // popUpTo dengan inclusive=true menghapus main screen dari back stack
-                    // Ini memastikan user tidak bisa kembali ke main screen
-                    // setelah logout tanpa login ulang (security measure)
+                    // Saat logout, kembali ke Login dan bersihkan semua back stack sebelumnya
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Main.route) { inclusive = true }
                     }
@@ -138,12 +99,16 @@ fun RootNavigation() {
                 onNavigateToUnggahDokumen = {
                     navController.navigate(Screen.UnggahDokumen.route)
                 },
+                onNavigateToEditProfile = {
+                    navController.navigate(Screen.EditProfile.route)
+                },
                 onNavigateToDetailPengajuan = { id ->
                     navController.navigate(Screen.ProgressPemohon.createRoute(id))
                 }
             )
         }
 
+        // Halaman-halaman detail yang bisa diakses dari MainScreen
         composable(Screen.ProfilDesa.route) {
             ProfilDesaScreen(
                 onBackPress = {
@@ -174,6 +139,7 @@ fun RootNavigation() {
             )
 
         }
+        // Halaman detail pengajuan dengan argumen I
         composable(
             route = Screen.ProgressPemohon.route,
             arguments = listOf(navArgument("pengajuanId") { type = NavType.IntType })
@@ -182,6 +148,17 @@ fun RootNavigation() {
             ProgressPemohonScreen(
                 pengajuanId = pengajuanId,
                 onBackPress = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Screen.EditProfile.route) {
+            EditProfileScreen(
+                onBackPress = {
+                    navController.popBackStack()
+                },
+                onSave = {
+                    // Setelah menyimpan, kembali ke halaman sebelumnya
                     navController.popBackStack()
                 }
             )

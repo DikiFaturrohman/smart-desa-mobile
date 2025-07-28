@@ -16,6 +16,6 @@ data class PengajuanItem(
 // Data untuk setiap langkah di halaman detail progres
 data class ProgressStep(
     val deskripsi: String,
-    val tanggal: String = "", // Tanggal bisa kosong jika statusnya menunggu
+    val tanggal: String = "",
     val status: StatusProgres
 )

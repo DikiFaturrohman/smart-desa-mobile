@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
@@ -23,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -44,231 +46,274 @@ fun RegisterScreen(
     onBackPress: () -> Unit
 ) {
     // === STATE MANAGEMENT UNTUK FORM FIELDS ===
-    // Menggunakan remember dan mutableStateOf untuk local state management
-    var nik by remember { mutableStateOf("") } // State untuk input NIK
-    var namaLengkap by remember { mutableStateOf("") } // State untuk input nama lengkap
-    var email by remember { mutableStateOf("") } // State untuk input email
-    var password by remember { mutableStateOf("") } // State untuk input password
-    var konfirmasiPassword by remember { mutableStateOf("") } // State untuk konfirmasi password
-    var nomorTelepon by remember { mutableStateOf("") } // State untuk input nomor telepon
-    var alamatLengkap by remember { mutableStateOf("") } // State untuk input alamat
-    var tanggalLahir by remember { mutableStateOf("") } // State untuk input tanggal lahir
-    var selectedDesa by remember { mutableStateOf("") } // State untuk dropdown pilihan desa
+    var nik by remember { mutableStateOf("") }
+    var namaLengkap by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var konfirmasiPassword by remember { mutableStateOf("") }
+    var nomorTelepon by remember { mutableStateOf("") }
+    var alamatLengkap by remember { mutableStateOf("") }
+    var tanggalLahir by remember { mutableStateOf("") }
+    var selectedDesa by remember { mutableStateOf("") }
+
+    // === STATE MANAGEMENT UNTUK VALIDATION ERRORS ===
+    var nikError by remember { mutableStateOf<String?>(null) }
+    var namaLengkapError by remember { mutableStateOf<String?>(null) }
+    var emailError by remember { mutableStateOf<String?>(null) }
+    var passwordError by remember { mutableStateOf<String?>(null) }
+    var konfirmasiPasswordError by remember { mutableStateOf<String?>(null) }
+    var nomorTeleponError by remember { mutableStateOf<String?>(null) }
+    var alamatLengkapError by remember { mutableStateOf<String?>(null) }
+    var tanggalLahirError by remember { mutableStateOf<String?>(null) }
+    var desaError by remember { mutableStateOf<String?>(null) }
+
 
     // === CONTEXT DAN STYLING ===
-    val context = LocalContext.current // Context untuk Toast notification
-    val primaryColor = Color(0xFF00BFA5) // Warna primary hijau toska aplikasi
+    val context = LocalContext.current
+    val primaryColor = Color(0xFF00BFA5)
 
-    // === SCAFFOLD SEBAGAI CONTAINER UTAMA ===
-    // Menggunakan Scaffold untuk layout yang konsisten dengan TopAppBar
+    // === FUNGSI VALIDASI ===
+    fun validate(): Boolean {
+        // Reset semua error sebelum validasi ulang
+        nikError = null
+        namaLengkapError = null
+        emailError = null
+        passwordError = null
+        konfirmasiPasswordError = null
+        nomorTeleponError = null
+        alamatLengkapError = null
+        tanggalLahirError = null
+        desaError = null
+
+        var isValid = true
+
+        if (nik.length != 16 || !nik.all { it.isDigit() }) {
+            nikError = "NIK harus terdiri dari 16 digit angka."
+            isValid = false
+        }
+        if (namaLengkap.isBlank()) {
+            namaLengkapError = "Nama lengkap tidak boleh kosong."
+            isValid = false
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailError = "Format email tidak valid."
+            isValid = false
+        }
+        if (password.isBlank()) {
+            passwordError = "Password tidak boleh kosong."
+            isValid = false
+        }
+        if (password != konfirmasiPassword) {
+            konfirmasiPasswordError = "Konfirmasi password tidak cocok."
+            isValid = false
+        }
+        if (nomorTelepon.isBlank()) {
+            nomorTeleponError = "Nomor telepon tidak boleh kosong."
+            isValid = false
+        }
+        if (alamatLengkap.isBlank()) {
+            alamatLengkapError = "Alamat lengkap tidak boleh kosong."
+            isValid = false
+        }
+        if (tanggalLahir.isBlank()) {
+            tanggalLahirError = "Tanggal lahir tidak boleh kosong."
+            isValid = false
+        }
+        if (selectedDesa.isBlank()) {
+            desaError = "Silakan pilih desa."
+            isValid = false
+        }
+
+        return isValid
+    }
+
+
     Scaffold(
-        // === TOP APP BAR ===
         topBar = {
             TopAppBar(
-                title = { }, // Empty title, hanya menggunakan navigation icon
+                title = { },
                 navigationIcon = {
-                    // Tombol back dengan arrow icon
                     IconButton(onClick = onBackPress) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Kembali", // Accessibility description
-                            tint = Color.White // Warna putih untuk kontras dengan background
+                            contentDescription = "Kembali",
+                            tint = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent // Transparent agar terlihat gradient background
+                    containerColor = Color.Transparent
                 )
             )
         },
-        // Container color scaffold disesuaikan dengan primary color
         containerColor = primaryColor
-    ) { paddingValues -> // PaddingValues dari Scaffold untuk menghindari overlap dengan TopAppBar
+    ) { paddingValues ->
 
-        // === MAIN CONTENT COLUMN ===
         Column(
-            modifier = Modifier.fillMaxSize() // Mengisi seluruh ukuran layar
+            modifier = Modifier.fillMaxSize()
         ) {
-            // === BAGIAN ATAS - HEADER DENGAN LOGO ===
-            // Box container untuk bagian header dengan gradient background
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.7f) // Mengambil 70% dari ruang vertikal tersedia
+                    .weight(0.7f)
                     .background(
-                        // Gradient vertikal dari hijau toska ke hijau toska gelap
                         brush = Brush.verticalGradient(
                             colors = listOf(primaryColor, Color(0xFF00897B))
                         )
                     ),
-                contentAlignment = Alignment.Center // Center alignment untuk logo
+                contentAlignment = Alignment.Center
             ) {
-                // Spacer untuk mendorong logo ke bawah sesuai tinggi TopAppBar
-                // agar posisi logo tetap konsisten dengan desain
                 Spacer(modifier = Modifier.height(paddingValues.calculateTopPadding()))
 
-                // === LOGO KABUPATEN ===
                 Image(
                     painter = painterResource(id = R.drawable.lambang_kabupaten_subang),
-                    contentDescription = "Logo Desa", // Accessibility description
+                    contentDescription = "Logo Desa",
                     modifier = Modifier
-                        .size(110.dp) // Ukuran logo 110x110 dp
-                        .shadow(8.dp, CircleShape) // Shadow dengan radius 8dp dan bentuk circle
-                        .clip(CircleShape) // Clipping gambar menjadi lingkaran
-                        .background(Color.White) // Background putih untuk logo
-                        .padding(12.dp), // Padding internal logo
-                    contentScale = ContentScale.Fit // Scaling agar gambar fit dalam container
+                        .size(110.dp)
+                        .shadow(8.dp, CircleShape)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                        .padding(12.dp),
+                    contentScale = ContentScale.Fit
                 )
             }
 
-            // === BAGIAN BAWAH - FORM REGISTRASI ===
-            // LazyColumn untuk form yang panjang dan scrollable
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(2.3f) // Mengambil 230% dari ruang vertikal tersisa
-                    .background(MaterialTheme.colorScheme.surface), // Background sesuai theme
-                // Content padding untuk spacing dan menghindari overlap dengan TopAppBar
+                    .weight(2.3f)
+                    .background(MaterialTheme.colorScheme.surface),
                 contentPadding = PaddingValues(
-                    top = 24.dp, // Padding atas
-                    bottom = 24.dp, // Padding bawah
-                    start = 24.dp, // Padding kiri
-                    end = 24.dp // Padding kanan
+                    top = 24.dp,
+                    bottom = 24.dp,
+                    start = 24.dp,
+                    end = 24.dp
                 ),
-                horizontalAlignment = Alignment.CenterHorizontally // Center alignment horizontal
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // === FORM INPUT FIELDS ===
-                // Setiap item menggunakan FormInputField composable untuk konsistensi
-
-                // Input field untuk NIK
                 item {
                     FormInputField(
                         label = "NIK :",
                         value = nik,
-                        placeholder = "NIK",
-                        onValueChange = { nik = it }
+                        placeholder = "16 Digit NIK",
+                        onValueChange = { if (it.length <= 16 && it.all { char -> char.isDigit() }) nik = it },
+                        error = nikError,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                 }
-
-                // Input field untuk Nama Lengkap
                 item {
                     FormInputField(
                         label = "Nama Lengkap :",
                         value = namaLengkap,
                         placeholder = "Nama Lengkap",
-                        onValueChange = { namaLengkap = it }
+                        onValueChange = { namaLengkap = it },
+                        error = namaLengkapError
                     )
                 }
-
-                // Input field untuk Email
                 item {
                     FormInputField(
                         label = "Email :",
                         value = email,
-                        placeholder = "Email",
-                        onValueChange = { email = it }
+                        placeholder = "contoh@email.com",
+                        onValueChange = { email = it },
+                        error = emailError,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                     )
                 }
-
-                // Input field untuk Password (dengan password transformation)
                 item {
                     FormInputField(
                         label = "Password :",
                         value = password,
                         placeholder = "Password",
                         onValueChange = { password = it },
-                        isPassword = true // Flag untuk password transformation
+                        isPassword = true,
+                        error = passwordError
                     )
                 }
-
-                // Input field untuk Konfirmasi Password
                 item {
                     FormInputField(
                         label = "Konfirmasi Password :",
                         value = konfirmasiPassword,
                         placeholder = "Konfirmasi Password",
                         onValueChange = { konfirmasiPassword = it },
-                        isPassword = true // Flag untuk password transformation
+                        isPassword = true,
+                        error = konfirmasiPasswordError
                     )
                 }
-
-                // Input field untuk Nomor Telepon
                 item {
                     FormInputField(
                         label = "Nomor Telepon :",
                         value = nomorTelepon,
-                        placeholder = "Nomor Telepon",
-                        onValueChange = { nomorTelepon = it }
+                        placeholder = "08xxxxxxxxxx",
+                        onValueChange = { nomorTelepon = it },
+                        error = nomorTeleponError,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
                     )
                 }
-
-                // Input field untuk Alamat Lengkap
                 item {
                     FormInputField(
                         label = "Alamat Lengkap :",
                         value = alamatLengkap,
                         placeholder = "Alamat Lengkap",
-                        onValueChange = { alamatLengkap = it }
+                        onValueChange = { alamatLengkap = it },
+                        error = alamatLengkapError
                     )
                 }
-
-                // Input field untuk Tanggal Lahir
                 item {
                     FormInputField(
                         label = "Tanggal Lahir :",
                         value = tanggalLahir,
-                        placeholder = "mm/dd/yy",
-                        onValueChange = { tanggalLahir = it }
+                        placeholder = "DD/MM/YYYY",
+                        onValueChange = { tanggalLahir = it },
+                        error = tanggalLahirError
                     )
                 }
-
-                // Dropdown field untuk pilihan desa
                 item {
                     DesaDropdownField(
                         selectedText = selectedDesa,
-                        onDesaSelected = { selectedDesa = it }
+                        onDesaSelected = { selectedDesa = it },
+                        error = desaError
                     )
                 }
 
-                // === SUBMIT BUTTON ===
                 item {
-                    Spacer(modifier = Modifier.height(24.dp)) // Spacing sebelum button
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                    // Tombol registrasi utama
                     Button(
                         onClick = {
-                            // Aksi ketika tombol diklik
-                            // Menampilkan toast sukses dan panggil callback
-                            Toast.makeText(context, "Registrasi Berhasil, Silakan Login", Toast.LENGTH_SHORT).show()
-                            onRegisterSuccess() // Callback ke parent untuk navigasi
+                            if (validate()) {
+                                Toast.makeText(context, "Registrasi Berhasil, Silakan Login", Toast.LENGTH_SHORT).show()
+                                onRegisterSuccess()
+                            } else {
+                                Toast.makeText(context, "Harap periksa kembali data Anda", Toast.LENGTH_SHORT).show()
+                            }
                         },
                         modifier = Modifier
-                            .fillMaxWidth() // Lebar penuh
-                            .height(50.dp), // Tinggi 50dp
-                        shape = RoundedCornerShape(12.dp), // Rounded corner 12dp
-                        colors = ButtonDefaults.buttonColors(containerColor = primaryColor) // Warna primary
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = primaryColor)
                     ) {
-                        Text("Daftar", fontSize = 16.sp) // Text dengan ukuran font 16sp
+                        Text("Daftar", fontSize = 16.sp)
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp)) // Spacing setelah button
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
     }
 }
 
-// === COMPOSABLE HELPER FUNCTIONS ===
-
 /**
  * Composable terpisah untuk input field agar tidak berulang
- * Menyediakan styling yang konsisten untuk semua form field
  *
  * @param label Label yang ditampilkan di atas field
  * @param value Nilai current dari field
  * @param placeholder Placeholder text untuk field
  * @param onValueChange Callback ketika nilai field berubah
- * @param isPassword Flag untuk menentukan apakah field adalah password (default: false)
+ * @param isPassword Flag untuk menentukan apakah field adalah password
+ * @param error Pesan error untuk ditampilkan jika ada
+ * @param keyboardOptions Opsi keyboard untuk TextField
  */
 @Composable
 private fun FormInputField(
@@ -276,145 +321,156 @@ private fun FormInputField(
     value: String,
     placeholder: String,
     onValueChange: (String) -> Unit,
-    isPassword: Boolean = false
+    isPassword: Boolean = false,
+    error: String? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
-    // State untuk mengontrol visibilitas password, spesifik untuk instance ini
     var passwordVisible by remember { mutableStateOf(false) }
 
-    // Column untuk layout vertikal label dan TextField
     Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.Start // Alignment kiri untuk label
+        horizontalAlignment = Alignment.Start
     ) {
-        // === LABEL TEXT ===
         Text(
             label,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold
         )
 
-        // === TEXT FIELD ===
         TextField(
-            value = value, // Nilai dari state
-            onValueChange = onValueChange, // Callback untuk update state
+            value = value,
+            onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
-                Text(placeholder, color = Color.LightGray) // Placeholder dengan warna abu-abu terang
+                Text(placeholder, color = Color.LightGray)
             },
-            // Visual transformation kondisional untuk password
             visualTransformation = if (isPassword && !passwordVisible) {
                 PasswordVisualTransformation()
             } else {
                 VisualTransformation.None
             },
-            // Menambahkan ikon di akhir field jika ini adalah field password
             trailingIcon = {
                 if (isPassword) {
                     val image = if (passwordVisible)
-                        Icons.Filled.VisibilityOff // Ikon mata tercoret
+                        Icons.Filled.VisibilityOff
                     else
-                        Icons.Filled.Visibility // Ikon mata
+                        Icons.Filled.Visibility
 
                     val description = if (passwordVisible) "Sembunyikan password" else "Tampilkan password"
 
-                    // Tombol ikon untuk mengubah visibilitas password
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(imageVector = image, contentDescription = description)
                     }
                 }
             },
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent, // Background transparan saat focus
-                unfocusedContainerColor = Color.Transparent, // Background transparan saat tidak focus
-                focusedIndicatorColor = Color(0xFF00BFA5), // Warna garis bawah saat focus
-                cursorColor = Color(0xFF00BFA5) // Warna cursor
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = if (error != null) MaterialTheme.colorScheme.error else Color(0xFF00BFA5),
+                unfocusedIndicatorColor = if (error != null) MaterialTheme.colorScheme.error else Color.LightGray,
+                cursorColor = Color(0xFF00BFA5)
             ),
-            singleLine = true // Single line input
+            singleLine = true,
+            isError = error != null,
+            keyboardOptions = keyboardOptions
         )
 
-        // Spacing setelah setiap field
+        // Tampilkan pesan error jika ada
+        if (error != null) {
+            Text(
+                text = error,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+            )
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
+
 /**
  * Composable terpisah untuk dropdown field pilihan desa
- * Menggunakan ExposedDropdownMenu untuk user experience yang baik
  *
  * @param selectedText Text yang currently selected
  * @param onDesaSelected Callback ketika desa dipilih
+ * @param error Pesan error untuk ditampilkan jika ada
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DesaDropdownField(
     selectedText: String,
-    onDesaSelected: (String) -> Unit
+    onDesaSelected: (String) -> Unit,
+    error: String? = null
 ) {
-    // === DROPDOWN OPTIONS ===
-    // List pilihan desa yang tersedia
     val desaOptions = listOf(
         "Desa Sukamandi",
         "Desa Sagalaherang Kaler",
         "Desa Sagalaherang Kidul"
     )
 
-    // State untuk mengontrol expanded/collapsed dropdown
     var expanded by remember { mutableStateOf(false) }
 
-    // Column untuk layout vertikal label dan dropdown
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start
     ) {
-        // === LABEL TEXT ===
         Text(
             "Pilih Desa :",
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold
         )
 
-        // === EXPOSED DROPDOWN MENU ===
         ExposedDropdownMenuBox(
-            expanded = expanded, // State expanded
-            onExpandedChange = { expanded = !expanded } // Toggle expanded state
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
         ) {
-            // === DROPDOWN TRIGGER FIELD ===
             TextField(
-                value = selectedText, // Selected value
-                onValueChange = {}, // Empty karena read-only
-                readOnly = true, // Read-only field, hanya bisa diklik untuk membuka dropdown
+                value = selectedText,
+                onValueChange = {},
+                readOnly = true,
                 placeholder = {
-                    Text("Nama Desa", color = Color.LightGray) // Placeholder
+                    Text("Nama Desa", color = Color.LightGray)
                 },
                 trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) // Arrow icon
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                 },
                 modifier = Modifier
-                    .menuAnchor() // Anchor untuk dropdown menu
+                    .menuAnchor()
                     .fillMaxWidth(),
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent, // Background transparan
-                    unfocusedContainerColor = Color.Transparent, // Background transparan
-                    focusedIndicatorColor = Color(0xFF00BFA5) // Warna garis bawah
-                )
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = if (error != null) MaterialTheme.colorScheme.error else Color(0xFF00BFA5),
+                    unfocusedIndicatorColor = if (error != null) MaterialTheme.colorScheme.error else Color.LightGray
+                ),
+                isError = error != null
             )
 
-            // === DROPDOWN MENU ITEMS ===
             ExposedDropdownMenu(
-                expanded = expanded, // State expanded
-                onDismissRequest = { expanded = false } // Close dropdown ketika klik di luar
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
             ) {
-                // Iterasi semua pilihan desa
                 desaOptions.forEach { option ->
                     DropdownMenuItem(
-                        text = { Text(option) }, // Text pilihan
+                        text = { Text(option) },
                         onClick = {
-                            onDesaSelected(option) // Callback dengan pilihan yang dipilih
-                            expanded = false // Close dropdown setelah pilih
+                            onDesaSelected(option)
+                            expanded = false
                         }
                     )
                 }
             }
+        }
+        // Tampilkan pesan error jika ada
+        if (error != null) {
+            Text(
+                text = error,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+            )
         }
     }
 }

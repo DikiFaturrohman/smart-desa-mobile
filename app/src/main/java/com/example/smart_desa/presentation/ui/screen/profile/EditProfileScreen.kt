@@ -27,8 +27,6 @@ import androidx.compose.ui.unit.sp
 import com.example.smart_desa.R
 
 /**
- * Halaman untuk mengedit profil pengguna.
- *
  * @param onBackPress Callback untuk kembali ke halaman sebelumnya.
  * @param onSave Callback yang dipanggil saat tombol "Simpan" ditekan.
  */
@@ -75,7 +73,7 @@ fun EditProfileScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Foto Profil (statis untuk contoh)
+            // Foto Profil
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = "Foto Profil",
@@ -88,12 +86,12 @@ fun EditProfileScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Field NIK (read-only)
+            // Field NIK
             EditProfileInputField(
                 label = "NIK",
                 value = nik,
                 onValueChange = { /* Tidak melakukan apa-apa */ },
-                enabled = false // Dibuat tidak bisa diedit
+                enabled = false
             )
 
             // Field Nama Lengkap
@@ -125,7 +123,7 @@ fun EditProfileScreen(
             Button(
                 onClick = {
                     Toast.makeText(context, "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show()
-                    onSave() // Panggil callback onSave
+                    onSave()
                 },
                 modifier = Modifier
                     .fillMaxWidth()

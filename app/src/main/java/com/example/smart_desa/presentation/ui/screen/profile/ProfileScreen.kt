@@ -24,29 +24,34 @@ import androidx.compose.ui.unit.sp
 import com.example.smart_desa.R // Pastikan Anda memiliki gambar di res/drawable
 import com.example.smart_desa.presentation.ui.screen.home.HomeHeader
 
-// Data class untuk menampung data user
+/** Model data untuk informasi pengguna. */
 data class UserData(
     val nik: String,
     val namaLengkap: String,
     val email: String,
     val nomorTelepon: String,
     val desa: String,
-    val photo: Int // Menggunakan Int untuk resource ID drawable
+    val photo: Int // Resource ID drawable
 )
 
+/**
+ * Menampilkan detail profil pengguna dan opsi untuk logout atau mengedit profil.
+ * @param onLogout Aksi untuk keluar dari akun.
+ * @param onNavigateToEditProfile Aksi untuk pindah ke layar edit profil.
+ */
 @Composable
 fun ProfileScreen(
     onLogout: () -> Unit,
     onNavigateToEditProfile: () -> Unit
 ) {
-    // Data pengguna (sementara menggunakan data palsu/mock)
+    // Data pengguna dummy untuk tampilan.
     val user = UserData(
         nik = "3213010120010001",
         namaLengkap = "John Doe",
         email = "john@example.com",
         nomorTelepon = "08123456789",
         desa = "Desa Sagalaherang",
-        photo = R.drawable.ic_launcher_foreground // Ganti dengan gambar profil Anda di folder drawable
+        photo = R.drawable.ic_launcher_foreground
     )
     val context = LocalContext.current
 
@@ -101,7 +106,7 @@ fun ProfileScreen(
                     ProfileInfoItem(label = "Nomor Telepon :", value = user.nomorTelepon)
                     ProfileInfoItem(label = "Desa", value = user.desa)
 
-                    Spacer(modifier = Modifier.weight(1f)) // Spacer untuk mendorong tombol ke bawah
+                    Spacer(modifier = Modifier.weight(1f))
 
                     // Tombol Edit Profil
                     Button(

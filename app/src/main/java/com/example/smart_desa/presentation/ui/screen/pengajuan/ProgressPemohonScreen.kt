@@ -20,10 +20,10 @@ import com.example.smart_desa.presentation.ui.screen.home.HomeHeader
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgressPemohonScreen(
-    pengajuanId: Int, // Terima ID untuk memuat data spesifik
+    pengajuanId: Int,
     onBackPress: () -> Unit
 ) {
-    // Data progres (sementara menggunakan data palsu/mock)
+    // Data progres
     val progressSteps = listOf(
         ProgressStep("Pengajuan Surat Keterangan Kematian", "01 Januari 2025", StatusProgres.SELESAI),
         ProgressStep("Dalam Proses Verifikasi Operator Desa", status = StatusProgres.MENUNGGU),

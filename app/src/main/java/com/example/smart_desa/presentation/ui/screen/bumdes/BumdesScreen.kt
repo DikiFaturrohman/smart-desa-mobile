@@ -27,8 +27,6 @@ data class BumdesMenuItem(
 )
 
 /**
- * Halaman yang menampilkan sub-menu dari BUMDES.
- *
  * @param onBackPress Callback untuk kembali ke halaman sebelumnya.
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +34,6 @@ data class BumdesMenuItem(
 fun BumdesScreen(
     onBackPress: () -> Unit
 ) {
-    // Daftar pilihan menu untuk BUMDES
     val bumdesOptions = listOf(
         BumdesMenuItem("Profil BUMDES", Icons.Default.Info),
         BumdesMenuItem("Produk BUMDES", Icons.Default.Category)
@@ -101,7 +98,7 @@ private fun BumdesMenuItemCard(menuItem: BumdesMenuItem) {
         ) {
             Icon(
                 imageVector = menuItem.icon,
-                contentDescription = null, // Deskripsi sudah ada di teks
+                contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.width(16.dp))

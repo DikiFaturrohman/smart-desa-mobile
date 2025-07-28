@@ -20,15 +20,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-// Data class untuk item menu Galeri
 data class GaleriMenuItem(
     val title: String,
     val icon: ImageVector
 )
 
 /**
- * Halaman yang menampilkan sub-menu dari Galeri.
- *
  * @param onBackPress Callback untuk kembali ke halaman sebelumnya.
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,9 +73,7 @@ fun GaleriScreen(
     }
 }
 
-/**
- * Composable untuk menampilkan setiap item menu Galeri dalam bentuk Card.
- */
+
 @Composable
 private fun GaleriMenuItemCard(menuItem: GaleriMenuItem) {
     val context = LocalContext.current
@@ -86,7 +81,7 @@ private fun GaleriMenuItemCard(menuItem: GaleriMenuItem) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                // Aksi saat item diklik
+
                 Toast
                     .makeText(context, "Membuka ${menuItem.title}", Toast.LENGTH_SHORT)
                     .show()

@@ -125,6 +125,7 @@ fun BeritaDetailScreen(
                     commentText = ""
                 },
                 modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BFA5))
             ) {
                 Text("Kirim")

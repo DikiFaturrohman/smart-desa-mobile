@@ -126,7 +126,8 @@ fun UnggahDokumenScreen(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BFA5)),
-                contentPadding = PaddingValues(vertical = 14.dp)
+                contentPadding = PaddingValues(vertical = 14.dp),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Text(text = "Simpan Dokumen", fontSize = 16.sp)
             }

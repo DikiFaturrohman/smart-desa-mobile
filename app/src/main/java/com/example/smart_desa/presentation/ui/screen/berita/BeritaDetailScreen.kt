@@ -51,7 +51,7 @@ fun BeritaDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
+                    containerColor = Color(0xFF00BFA5),
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
@@ -124,7 +124,8 @@ fun BeritaDetailScreen(
                     Toast.makeText(context, "Komentar terkirim!", Toast.LENGTH_SHORT).show()
                     commentText = ""
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BFA5))
             ) {
                 Text("Kirim")
             }

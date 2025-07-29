@@ -52,7 +52,7 @@ fun GaleriScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
+                    containerColor = Color(0xFF00BFA5),
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
@@ -97,7 +97,7 @@ private fun GaleriMenuItemCard(menuItem: GaleriMenuItem) {
             Icon(
                 imageVector = menuItem.icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                tint = Color(0xFF00BFA5)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(

@@ -62,7 +62,8 @@ fun MainScreen(
     onNavigateToGaleri: () -> Unit,
     onNavigateToUnggahDokumen: () -> Unit,
     onNavigateToEditProfile: () -> Unit,
-    onNavigateToDetailPengajuan: (Int) -> Unit
+    onNavigateToDetailPengajuan: (Int) -> Unit,
+    onNavigateToBeritaDetail: (Int) -> Unit
 ) {
     /**
      * NavController khusus untuk mengelola navigasi bottom navigation bar
@@ -173,7 +174,8 @@ fun MainScreen(
                     onNavigateToProfilDesa = onNavigateToProfilDesa,
                     onNavigateToBumdes = onNavigateToBumdes,
                     onNavigateToGaleri = onNavigateToGaleri,
-                    onNavigateToUnggahDokumen = onNavigateToUnggahDokumen
+                    onNavigateToUnggahDokumen = onNavigateToUnggahDokumen,
+                    onNavigateToBeritaDetail = onNavigateToBeritaDetail
                     )
             }
 

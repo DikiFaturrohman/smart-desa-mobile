@@ -114,6 +114,7 @@ fun ProfileScreen(
                             onNavigateToEditProfile()
                         },
                         modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BFA5)),
                         contentPadding = PaddingValues(vertical = 14.dp)
                     ) {
@@ -126,6 +127,7 @@ fun ProfileScreen(
                     Button(
                         onClick = onLogout, // Menggunakan callback onLogout
                         modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336)), // Warna merah
                         contentPadding = PaddingValues(vertical = 14.dp)
                     ) {

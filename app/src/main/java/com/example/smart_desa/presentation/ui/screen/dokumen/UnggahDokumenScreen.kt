@@ -73,7 +73,7 @@ fun UnggahDokumenScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
+                    containerColor = Color(0xFF00BFA5),
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
@@ -125,7 +125,9 @@ fun UnggahDokumenScreen(
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(vertical = 14.dp)
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BFA5)),
+                contentPadding = PaddingValues(vertical = 14.dp),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Text(text = "Simpan Dokumen", fontSize = 16.sp)
             }

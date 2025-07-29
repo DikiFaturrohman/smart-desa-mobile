@@ -18,6 +18,7 @@ import com.example.smart_desa.presentation.ui.screen.pengajuan.ProgressPemohonSc
 import com.example.smart_desa.presentation.ui.screen.profildesa.ProfilDesaScreen
 import com.example.smart_desa.presentation.ui.screen.profile.EditProfileScreen
 import com.example.smart_desa.presentation.ui.screen.splash.SplashScreen
+import com.example.smart_desa.presentation.ui.screen.berita.BeritaDetailScreen
 
 // Mengelola seluruh alur navigasi aplikasi menggunakan Jetpack Navigation.
 @Composable
@@ -104,6 +105,9 @@ fun RootNavigation() {
                 },
                 onNavigateToDetailPengajuan = { id ->
                     navController.navigate(Screen.ProgressPemohon.createRoute(id))
+                },
+                onNavigateToBeritaDetail = { beritaId ->
+                    navController.navigate(Screen.BeritaDetail.createRoute(beritaId))
                 }
             )
         }
@@ -163,4 +167,15 @@ fun RootNavigation() {
                 }
             )
         }
-        }}
+        composable(
+            route = Screen.BeritaDetail.route,
+            arguments = listOf(navArgument("beritaId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val beritaId = backStackEntry.arguments?.getInt("beritaId") ?: 0
+            BeritaDetailScreen(
+                beritaId = beritaId,
+                onBackPress = { navController.popBackStack() }
+            )
+        }
+        }
+}

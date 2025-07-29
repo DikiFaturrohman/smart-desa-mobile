@@ -27,6 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.smart_desa.R
 
+// Data class untuk setiap item berita
+data class BeritaItem(
+    val id: Int,
+    val title: String,
+    val imageRes: Int
+)
+
 /**
  * Menampilkan header, menu grid, info grafis, dan berita dalam layout vertikal
  * @param onLogout Callback function untuk aksi logout (disediakan untuk kebutuhan masa depan)
@@ -37,7 +44,8 @@ fun HomeScreen(
     onNavigateToProfilDesa: () -> Unit,
     onNavigateToBumdes: () -> Unit,
     onNavigateToGaleri: () -> Unit,
-    onNavigateToUnggahDokumen: () -> Unit
+    onNavigateToUnggahDokumen: () -> Unit,
+    onNavigateToBeritaDetail: (Int) -> Unit
 ) {
 
 
@@ -60,12 +68,12 @@ fun HomeScreen(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp) // Memberi jarak antar semua item utama
         ) {
             // Header
             item {
                 HomeHeader()
-                Spacer(modifier = Modifier.height(24.dp))
             }
 
             // Menu Grid
@@ -76,18 +84,16 @@ fun HomeScreen(
                     onNavigateToGaleri = onNavigateToGaleri,
                     onNavigateToUnggahDokumen = onNavigateToUnggahDokumen
                 )
-                Spacer(modifier = Modifier.height(24.dp))
             }
 
             // Info Grafis
             item {
                 InfoGrafisSection()
-                Spacer(modifier = Modifier.height(24.dp))
             }
 
             // Berita
             item {
-                BeritaSection()
+                BeritaSection(onNavigateToBeritaDetail = onNavigateToBeritaDetail) // Teruskan callback
             }
         }
     }
@@ -143,7 +149,7 @@ fun MenuGridSection(
     onNavigateToBumdes: () -> Unit,
     onNavigateToGaleri: () -> Unit,
     onNavigateToUnggahDokumen: () -> Unit
-    ) {
+) {
 
     val menuItems = listOf(
         MenuItem("Profil Desa", Icons.Default.AccountBalance),
@@ -276,7 +282,7 @@ fun InfoGrafisSection() {
             contentPadding = PaddingValues(horizontal = 8.dp),
             pageSpacing = 16.dp
 
-        // Card Infografis
+            // Card Infografis
         ) { page ->
             // Setiap item di dalam Pager adalah sebuah Card
             Card(
@@ -309,7 +315,7 @@ fun InfoGrafisSection() {
             repeat(pagerState.pageCount) { iteration ->
 
                 val color =
-                    if (pagerState.currentPage == iteration) primaryColor else Color.LightGray
+                    if (pagerState.currentPage == iteration) Color.Gray else Color.LightGray
 
                 val size = if (pagerState.currentPage == iteration) 10.dp else 8.dp
 
@@ -322,16 +328,26 @@ fun InfoGrafisSection() {
                 )
             }
         }
-        }
+    }
 }
 
 /**
  * Berita
- * Berisi judul section dan gambar berita dalam Card yang clickable
+ * Berisi judul section dan daftar berita dalam Card yang clickable
  */
 @Composable
-fun BeritaSection() {
-    Column(modifier = Modifier.fillMaxWidth()) {
+fun BeritaSection(onNavigateToBeritaDetail: (Int) -> Unit) {
+    // Daftar berita dummy
+    val daftarBerita = listOf(
+        BeritaItem(1, "Kecelakaan Maut di Jalur Pantura Subang, 2 Orang Meninggal Dunia", R.drawable.berita_subang),
+        BeritaItem(2, "Pemdes Sukamandi Gelar Pelatihan UMKM untuk Ibu-Ibu PKK", R.drawable.berita_subang),
+        BeritaItem(3, "Jalan Desa Selesai Diperbaiki, Warga Sambut Gembira", R.drawable.berita_subang)
+    )
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp) // Jarak antar kartu berita
+    ) {
         // Judul
         Text(
             text = "Berita",
@@ -340,50 +356,62 @@ fun BeritaSection() {
             color = Color.White
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        // Looping untuk menampilkan setiap berita
+        daftarBerita.forEach { berita ->
+            // Panggil BeritaCard dengan callback
+            BeritaCard(
+                berita = berita,
+                onClick = { onNavigateToBeritaDetail(berita.id) }
+            )
+        }
+    }
+}
 
-        // Card
-        Card(
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(4.dp),
-            modifier = Modifier.clickable { /* TODO: Handle berita click */ }
+/**
+ * Composable untuk menampilkan satu kartu berita.
+ * @param berita Data berita yang akan ditampilkan.
+ */
+@Composable
+fun BeritaCard(berita: BeritaItem, onClick: () -> Unit) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(4.dp),
+        modifier = Modifier.clickable(onClick = onClick)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp)
         ) {
+            Image(
+                painter = painterResource(id = berita.imageRes),
+                contentDescription = berita.title,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+
+            // Gradient Overlay untuk membuat teks lebih mudah dibaca
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-            ) {
-
-                Image(
-                    painter = painterResource(id = R.drawable.berita_subang),
-                    contentDescription = "Berita Kecelakaan",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-
-                // Gradient Overlay
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.8f)),
-                                startY = 300f
-                            )
+                    .fillMaxSize()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.8f)),
+                            startY = 300f // Mulai gradien dari 300px ke bawah
                         )
-                )
+                    )
+            )
 
-                // Teks
-                Text(
-                    text = "Kecelakaan Maut di Jalur Pantura Subang, 2 Orang Meninggal Dunia",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(16.dp)
-                )
-            }
+            // Teks Judul Berita
+            Text(
+                text = berita.title,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(16.dp)
+            )
         }
     }
 }

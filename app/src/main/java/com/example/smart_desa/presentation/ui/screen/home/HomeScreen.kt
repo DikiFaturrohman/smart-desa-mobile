@@ -315,7 +315,7 @@ fun InfoGrafisSection() {
             repeat(pagerState.pageCount) { iteration ->
 
                 val color =
-                    if (pagerState.currentPage == iteration) primaryColor else Color.LightGray
+                    if (pagerState.currentPage == iteration) Color.Gray else Color.LightGray
 
                 val size = if (pagerState.currentPage == iteration) 10.dp else 8.dp
 

@@ -3,6 +3,7 @@ package com.example.smart_desa.presentation.ui.screen.layanan
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -95,7 +96,9 @@ fun DetailLayananScreen(
                         Toast.makeText(context, "Harap isi kolom Keperluan", Toast.LENGTH_SHORT).show()
                     }
                 },
-                modifier = Modifier.fillMaxWidth().height(50.dp)
+                modifier = Modifier.fillMaxWidth().height(50.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BFA5)),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Text("Ajukan Permohonan")
             }

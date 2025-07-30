@@ -19,6 +19,9 @@ import com.example.smart_desa.presentation.ui.screen.profildesa.ProfilDesaScreen
 import com.example.smart_desa.presentation.ui.screen.profile.EditProfileScreen
 import com.example.smart_desa.presentation.ui.screen.splash.SplashScreen
 import com.example.smart_desa.presentation.ui.screen.berita.BeritaDetailScreen
+import com.example.smart_desa.presentation.ui.screen.layanan.DetailLayananScreen
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 // Mengelola seluruh alur navigasi aplikasi menggunakan Jetpack Navigation.
 @Composable
@@ -108,6 +111,9 @@ fun RootNavigation() {
                 },
                 onNavigateToBeritaDetail = { beritaId ->
                     navController.navigate(Screen.BeritaDetail.createRoute(beritaId))
+                },
+                onNavigateToDetailLayanan = { layananTitle ->
+                    navController.navigate(Screen.DetailLayanan.createRoute(layananTitle))
                 }
             )
         }
@@ -156,6 +162,7 @@ fun RootNavigation() {
                 }
             )
         }
+
         composable(Screen.EditProfile.route) {
             EditProfileScreen(
                 onBackPress = {
@@ -175,6 +182,21 @@ fun RootNavigation() {
             BeritaDetailScreen(
                 beritaId = beritaId,
                 onBackPress = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route = Screen.DetailLayanan.route,
+            arguments = listOf(navArgument("layananTitle") { type = NavType.StringType })
+        ) { backStackEntry ->
+            // --- UBAH BAGIAN INI ---
+            val encodedTitle = backStackEntry.arguments?.getString("layananTitle") ?: "Layanan"
+            val title = URLDecoder.decode(encodedTitle, StandardCharsets.UTF_8.toString())
+            // -------------------------
+
+            DetailLayananScreen(
+                layananTitle = title, // Gunakan title yang sudah di-decode
+                onBackPress = { navController.popBackStack() },
+                onAjukan = { navController.popBackStack() }
             )
         }
         }

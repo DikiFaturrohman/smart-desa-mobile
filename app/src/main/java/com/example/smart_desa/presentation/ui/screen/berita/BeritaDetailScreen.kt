@@ -28,8 +28,6 @@ fun BeritaDetailScreen(
     beritaId: Int,
     onBackPress: () -> Unit
 ) {
-    // Di aplikasi nyata, Anda akan menggunakan beritaId untuk mengambil data dari ViewModel.
-    // Untuk saat ini, kita gunakan data dummy.
     val berita = BeritaItem(
         id = beritaId,
         title = "Kecelakaan Maut di Jalur Pantura Subang, 2 Orang Meninggal Dunia",

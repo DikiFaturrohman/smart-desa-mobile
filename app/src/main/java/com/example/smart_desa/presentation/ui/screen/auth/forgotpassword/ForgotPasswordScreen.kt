@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 /**
- * Composable untuk halaman Lupa Kata Sandi.
  * Pengguna memasukkan nomor telepon untuk menerima kode verifikasi.
  *
  * @param onBackPress Callback untuk navigasi kembali ke halaman sebelumnya.
@@ -57,42 +56,41 @@ fun ForgotPasswordScreen(
     var nomorTelepon by remember { mutableStateOf("") }
     // Konteks lokal untuk menampilkan Toast
     val context = LocalContext.current
-    // Warna utama aplikasi
+
     val primaryColor = Color(0xFF00BFA5)
 
-    // Scaffold menyediakan struktur dasar Material Design (termasuk TopAppBar)
+    // Scaffold Material Design
     Scaffold(
         topBar = {
-            // TopAppBar transparan dengan tombol kembali
+            // TopAppBar
             TopAppBar(
-                title = { }, // Judul kosong
+                title = { },
                 navigationIcon = {
                     IconButton(onClick = onBackPress) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Kembali",
-                            tint = Color.White // Ikon berwarna putih agar kontras
+                            tint = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent // Transparan agar gradien terlihat
+                    containerColor = Color.Transparent
                 )
             )
         },
-        containerColor = primaryColor // Warna latar belakang utama Scaffold
+        containerColor = primaryColor
     ) { paddingValues ->
 
-        // Container utama yang mengisi seluruh layar
+        // Container
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            // === BAGIAN ATAS - HEADER ===
-            // Box untuk header dengan latar belakang gradien
+            // Header
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f) // Mengambil 1/3 bagian atas layar
+                    .weight(1f) // 1/3 Screen
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(primaryColor, Color(0xFF00897B))
@@ -100,23 +98,22 @@ fun ForgotPasswordScreen(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                // Spacer untuk memastikan konten di bawah TopAppBar
+
                 Spacer(modifier = Modifier.height(paddingValues.calculateTopPadding()))
-                // Di sini Anda bisa menambahkan logo jika diinginkan, seperti di halaman login
+
             }
 
-            // === BAGIAN BAWAH - FORM ===
-            // Column untuk form dengan sudut atas yang membulat
+            // Form
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(2f) // Mengambil 2/3 bagian bawah layar
+                    .weight(2f)
                     .clip(RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp))
                     .background(MaterialTheme.colorScheme.surface)
                     .padding(horizontal = 24.dp, vertical = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // === HEADER TEXT ===
+
                 Text(
                     text = "Lupa Kata Sandi?",
                     style = MaterialTheme.typography.headlineLarge,
@@ -131,7 +128,7 @@ fun ForgotPasswordScreen(
                 )
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // === INPUT FIELD NOMOR TELEPON ===
+                // Input Field
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
                     Text("Nomor Telepon :", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
                     TextField(
@@ -151,10 +148,10 @@ fun ForgotPasswordScreen(
                 }
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // === TOMBOL KIRIM KODE ===
+
                 Button(
                     onClick = {
-                        // Aksi saat ini hanya menampilkan Toast
+
                         Toast.makeText(context, "Fungsi ini belum tersedia", Toast.LENGTH_SHORT).show()
                     },
                     modifier = Modifier
@@ -165,7 +162,7 @@ fun ForgotPasswordScreen(
                 ) {
                     Text("Kirim Kode", fontSize = 16.sp)
                 }
-                // Spacer untuk mendorong konten ke atas
+
                 Spacer(modifier = Modifier.weight(1f))
             }
         }

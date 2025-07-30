@@ -1,5 +1,8 @@
 package com.example.smart_desa.presentation.navigation
 
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+
 sealed class Screen(val route: String) {
     // Rute untuk alur Autentikasi
     object Login : Screen("login_screen")
@@ -17,6 +20,13 @@ sealed class Screen(val route: String) {
 
     data object BeritaDetail: Screen("berita_detail_screen/{beritaId}") {
         fun createRoute(beritaId: Int) = "berita_detail_screen/$beritaId"
+    }
+
+    data object DetailLayanan : Screen("detail_layanan_screen/{layananTitle}") {
+        fun createRoute(layananTitle: String): String {
+            val encodedTitle = URLEncoder.encode(layananTitle, StandardCharsets.UTF_8.toString())
+            return "detail_layanan_screen/$encodedTitle"
+        }
     }
 
     // Rute untuk alur utama setelah login (termasuk bottom nav)

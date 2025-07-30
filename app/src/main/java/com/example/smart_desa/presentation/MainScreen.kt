@@ -63,13 +63,10 @@ fun MainScreen(
     onNavigateToUnggahDokumen: () -> Unit,
     onNavigateToEditProfile: () -> Unit,
     onNavigateToDetailPengajuan: (Int) -> Unit,
-    onNavigateToBeritaDetail: (Int) -> Unit
+    onNavigateToBeritaDetail: (Int) -> Unit,
+    onNavigateToDetailLayanan: (String) -> Unit
 ) {
-    /**
-     * NavController khusus untuk mengelola navigasi bottom navigation bar
-     * Controller ini HANYA menangani perpindahan antar tab di bottom bar,
-     * bukan untuk navigasi ke screen lain di luar main tabs
-     */
+
     val bottomNavController = rememberNavController()
 
     /**
@@ -86,11 +83,6 @@ fun MainScreen(
         BottomNavItem("Profil", Screen.Profile.route, Icons.Default.Person)
     )
 
-    /**
-     * Scaffold adalah layout dasar Material Design 3 yang menyediakan
-     * struktur umum untuk screen dengan app bar, bottom bar, floating action button, dll.
-     * Di sini kita hanya menggunakan bottomBar dan content area
-     */
     Scaffold(
         bottomBar = {
             /**
@@ -192,8 +184,9 @@ fun MainScreen(
              * Definisi route untuk Layanan screen
              * Screen untuk menampilkan berbagai layanan desa yang tersedia
              */
-            composable(Screen.Layanan.route) { LayananScreen() }
-
+            composable(Screen.Layanan.route) {
+                LayananScreen(onNavigateToDetail = onNavigateToDetailLayanan) // Ini sudah benar
+            }
             /**
              * Definisi route untuk Pengajuan screen
              * Screen untuk melihat dan mengelola pengajuan yang telah dibuat user

@@ -1,5 +1,6 @@
 package com.example.smart_desa.presentation.ui.screen.layanan
 
+
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -43,7 +44,7 @@ data class Layanan(
  * Menampilkan daftar layanan administrasi yang tersedia di desa.
  */
 @Composable
-fun LayananScreen() {
+fun LayananScreen(onNavigateToDetail: (layananTitle: String) -> Unit) {
     // Daftar layanan yang akan ditampilkan
     val daftarLayanan = listOf(
         Layanan("Surat Keterangan Kematian", "Surat resmi sebagai bukti awal kematian, syarat penting untuk mengurus Akta Kematian dan administrasi lainnya."),
@@ -104,7 +105,12 @@ fun LayananScreen() {
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(daftarLayanan) { layanan ->
-                            LayananItemCard(layanan = layanan)
+                            // Teruskan callback ke setiap item
+                            LayananItemCard(
+                                layanan = layanan,
+                                // DIUBAH: Panggil callback dengan judul layanan
+                                onClick = { onNavigateToDetail(layanan.judul) }
+                            )
                         }
                     }
                 }
@@ -118,18 +124,12 @@ fun LayananScreen() {
  * @param layanan Objek data layanan yang akan ditampilkan.
  */
 @Composable
-fun LayananItemCard(layanan: Layanan) {
+fun LayananItemCard(layanan: Layanan, onClick: () -> Unit) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                // Aksi ketika item di-klik, misalnya menampilkan Toast
-                Toast
-                    .makeText(context, "Membuka ${layanan.judul}", Toast.LENGTH_SHORT)
-                    .show()
-                // TODO: Tambahkan navigasi ke halaman detail layanan
-            },
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, Color.LightGray),
         colors = CardDefaults.cardColors(containerColor = Color.White),

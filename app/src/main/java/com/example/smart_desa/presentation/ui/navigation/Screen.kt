@@ -19,6 +19,10 @@ sealed class Screen(val route: String) {
         fun createRoute(beritaId: Int) = "berita_detail_screen/$beritaId"
     }
 
+    data object DetailLayanan : Screen("detail_layanan_screen/{layananTitle}") {
+        fun createRoute(layananTitle: String) = "detail_layanan_screen/$layananTitle"
+    }
+
     // Rute untuk alur utama setelah login (termasuk bottom nav)
     object Main : Screen("main_screen")
 

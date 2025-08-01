@@ -22,6 +22,13 @@ import com.example.smart_desa.presentation.ui.screen.berita.BeritaDetailScreen
 import com.example.smart_desa.presentation.ui.screen.layanan.DetailLayananScreen
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
+import com.example.smart_desa.presentation.ui.screen.profildesa.VisiMisiScreen
+import com.example.smart_desa.presentation.ui.screen.profildesa.SejarahScreen
+import com.example.smart_desa.presentation.ui.screen.profildesa.GeografisScreen
+import com.example.smart_desa.presentation.ui.screen.profildesa.GambaranUmumScreen
+import com.example.smart_desa.presentation.ui.screen.bumdes.ProfilBumdesScreen
+import com.example.smart_desa.presentation.ui.screen.bumdes.ProdukBumdesScreen
+
 
 // Mengelola seluruh alur navigasi aplikasi menggunakan Jetpack Navigation.
 @Composable
@@ -121,18 +128,50 @@ fun RootNavigation() {
         // Halaman-halaman detail yang bisa diakses dari MainScreen
         composable(Screen.ProfilDesa.route) {
             ProfilDesaScreen(
-                onBackPress = {
-                    navController.popBackStack()
-                }
+                onBackPress = { navController.popBackStack() },
+                // Tambahkan navigasi ke halaman detail
+                onNavigateToVisiMisi = { navController.navigate(Screen.VisiMisi.route) },
+                onNavigateToSejarah = { navController.navigate(Screen.Sejarah.route) },
+                onNavigateToGeografis = { navController.navigate(Screen.Geografis.route) },
+                onNavigateToGambaranUmum = { navController.navigate(Screen.GambaranUmum.route) }
             )
         }
+
+        composable(Screen.VisiMisi.route) {
+            VisiMisiScreen(onBackPress = { navController.popBackStack() })
+        }
+        composable(Screen.Sejarah.route) {
+            SejarahScreen(onBackPress = { navController.popBackStack() })
+        }
+        composable(Screen.Geografis.route) {
+            GeografisScreen(onBackPress = { navController.popBackStack() })
+        }
+        composable(Screen.GambaranUmum.route) {
+            GambaranUmumScreen(onBackPress = { navController.popBackStack() })
+        }
+
         composable(Screen.Bumdes.route) {
             BumdesScreen(
                 onBackPress = {
                     navController.popBackStack()
+                },
+                onNavigateToProfilBumdes = {
+                    navController.navigate(Screen.ProfilBumdes.route)
+                },
+                onNavigateToProdukBumdes = {
+                    navController.navigate(Screen.ProdukBumdes.route)
                 }
             )
         }
+
+        composable(Screen.ProfilBumdes.route) {
+            ProfilBumdesScreen(onBackPress = { navController.popBackStack() })
+        }
+
+        composable(Screen.ProdukBumdes.route) {
+            ProdukBumdesScreen(onBackPress = { navController.popBackStack() })
+        }
+
         composable(Screen.Galeri.route) {
             GaleriScreen(
                 onBackPress = {
@@ -149,6 +188,9 @@ fun RootNavigation() {
             )
 
         }
+
+
+
         // Halaman detail pengajuan dengan argumen I
         composable(
             route = Screen.ProgressPemohon.route,

@@ -44,7 +44,11 @@ data class ProfilDesaMenuItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfilDesaScreen(
-    onBackPress: () -> Unit
+    onBackPress: () -> Unit,
+    onNavigateToVisiMisi: () -> Unit,
+    onNavigateToSejarah: () -> Unit,
+    onNavigateToGeografis: () -> Unit,
+    onNavigateToGambaranUmum: () -> Unit
 ) {
     // Daftar pilihan menu untuk Profil Desa
     val profilDesaOptions = listOf(
@@ -82,7 +86,11 @@ fun ProfilDesaScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(profilDesaOptions) { menuItem ->
-                ProfilDesaMenuItemCard(menuItem = menuItem)
+                ProfilDesaMenuItemCard(menuItem = menuItem,
+                    onNavigateToVisiMisi = onNavigateToVisiMisi,
+                    onNavigateToSejarah = onNavigateToSejarah,
+                    onNavigateToGeografis = onNavigateToGeografis,
+                    onNavigateToGambaranUmum = onNavigateToGambaranUmum)
             }
         }
     }
@@ -94,17 +102,28 @@ fun ProfilDesaScreen(
  * @param menuItem Data item menu yang akan ditampilkan.
  */
 @Composable
-private fun ProfilDesaMenuItemCard(menuItem: ProfilDesaMenuItem) {
+private fun ProfilDesaMenuItemCard(
+    menuItem: ProfilDesaMenuItem,
+                                       onNavigateToVisiMisi: () -> Unit,
+                                       onNavigateToSejarah: () -> Unit,
+                                       onNavigateToGeografis: () -> Unit,
+                                       onNavigateToGambaranUmum: () -> Unit) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                // Aksi saat item diklik, untuk saat ini hanya menampilkan Toast
-                Toast
-                    .makeText(context, "Membuka ${menuItem.title}", Toast.LENGTH_SHORT)
-                    .show()
-                // TODO: Navigasi ke halaman detail sesuai menuItem.title
+                when (menuItem.title) {
+                    "Visi Misi" -> onNavigateToVisiMisi()
+                    "Sejarah" -> onNavigateToSejarah()
+                    "Geografis" -> onNavigateToGeografis()
+                    "Gambaran Umum" -> onNavigateToGambaranUmum()
+                    else -> {
+                        Toast
+                            .makeText(context, "Membuka ${menuItem.title}", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
             },
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(2.dp)

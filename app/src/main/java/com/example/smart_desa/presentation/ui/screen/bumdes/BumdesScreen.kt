@@ -32,7 +32,9 @@ data class BumdesMenuItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BumdesScreen(
-    onBackPress: () -> Unit
+    onBackPress: () -> Unit,
+    onNavigateToProfilBumdes: () -> Unit,
+    onNavigateToProdukBumdes: () -> Unit
 ) {
     val bumdesOptions = listOf(
         BumdesMenuItem("Profil BUMDES", Icons.Default.Info),
@@ -67,7 +69,11 @@ fun BumdesScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(bumdesOptions) { menuItem ->
-                BumdesMenuItemCard(menuItem = menuItem)
+                BumdesMenuItemCard(
+                    menuItem = menuItem,
+                    onNavigateToProfilBumdes = onNavigateToProfilBumdes,
+                    onNavigateToProdukBumdes = onNavigateToProdukBumdes
+                )
             }
         }
     }
@@ -77,17 +83,25 @@ fun BumdesScreen(
  * Composable untuk menampilkan setiap item menu BUMDES dalam bentuk Card.
  */
 @Composable
-private fun BumdesMenuItemCard(menuItem: BumdesMenuItem) {
+private fun BumdesMenuItemCard(
+    menuItem: BumdesMenuItem,
+    onNavigateToProfilBumdes: () -> Unit,
+    onNavigateToProdukBumdes: () -> Unit
+) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                // Aksi saat item diklik, untuk saat ini hanya menampilkan Toast
-                Toast
-                    .makeText(context, "Membuka ${menuItem.title}", Toast.LENGTH_SHORT)
-                    .show()
-                // TODO: Navigasi ke halaman detail sesuai menuItem.title
+                when (menuItem.title) {
+                    "Profil BUMDES" -> onNavigateToProfilBumdes()
+                    "Produk BUMDES" -> onNavigateToProdukBumdes()
+                    else -> {
+                        Toast
+                            .makeText(context, "Membuka ${menuItem.title}", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
             },
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(2.dp)

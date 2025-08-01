@@ -26,7 +26,8 @@ import com.example.smart_desa.presentation.ui.screen.profildesa.VisiMisiScreen
 import com.example.smart_desa.presentation.ui.screen.profildesa.SejarahScreen
 import com.example.smart_desa.presentation.ui.screen.profildesa.GeografisScreen
 import com.example.smart_desa.presentation.ui.screen.profildesa.GambaranUmumScreen
-
+import com.example.smart_desa.presentation.ui.screen.bumdes.ProfilBumdesScreen
+import com.example.smart_desa.presentation.ui.screen.bumdes.ProdukBumdesScreen
 
 
 // Mengelola seluruh alur navigasi aplikasi menggunakan Jetpack Navigation.
@@ -153,9 +154,24 @@ fun RootNavigation() {
             BumdesScreen(
                 onBackPress = {
                     navController.popBackStack()
+                },
+                onNavigateToProfilBumdes = {
+                    navController.navigate(Screen.ProfilBumdes.route)
+                },
+                onNavigateToProdukBumdes = {
+                    navController.navigate(Screen.ProdukBumdes.route)
                 }
             )
         }
+
+        composable(Screen.ProfilBumdes.route) {
+            ProfilBumdesScreen(onBackPress = { navController.popBackStack() })
+        }
+
+        composable(Screen.ProdukBumdes.route) {
+            ProdukBumdesScreen(onBackPress = { navController.popBackStack() })
+        }
+
         composable(Screen.Galeri.route) {
             GaleriScreen(
                 onBackPress = {
@@ -172,6 +188,9 @@ fun RootNavigation() {
             )
 
         }
+
+
+
         // Halaman detail pengajuan dengan argumen I
         composable(
             route = Screen.ProgressPemohon.route,

@@ -28,7 +28,8 @@ import com.example.smart_desa.presentation.ui.screen.profildesa.GeografisScreen
 import com.example.smart_desa.presentation.ui.screen.profildesa.GambaranUmumScreen
 import com.example.smart_desa.presentation.ui.screen.bumdes.ProfilBumdesScreen
 import com.example.smart_desa.presentation.ui.screen.bumdes.ProdukBumdesScreen
-
+import com.example.smart_desa.presentation.ui.screen.galeri.FotoScreen
+import com.example.smart_desa.presentation.ui.screen.galeri.VideoScreen
 
 // Mengelola seluruh alur navigasi aplikasi menggunakan Jetpack Navigation.
 @Composable
@@ -176,11 +177,24 @@ fun RootNavigation() {
             GaleriScreen(
                 onBackPress = {
                     navController.popBackStack()
+                },
+                onNavigateToFoto = {
+                    navController.navigate(Screen.Foto.route)
+                },
+                onNavigateToVideo = {
+                    navController.navigate(Screen.Video.route)
                 }
             )
-
         }
-        composable(Screen.UnggahDokumen.route) {
+
+        composable(Screen.Foto.route) {
+            FotoScreen(onBackPress = { navController.popBackStack() })
+        }
+        composable(Screen.Video.route) {
+            VideoScreen(onBackPress = { navController.popBackStack() })
+        }
+
+            composable(Screen.UnggahDokumen.route) {
             UnggahDokumenScreen(
                 onBackPress = {
                     navController.popBackStack()

@@ -31,7 +31,9 @@ data class GaleriMenuItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GaleriScreen(
-    onBackPress: () -> Unit
+    onBackPress: () -> Unit,
+    onNavigateToFoto: () -> Unit,
+    onNavigateToVideo: () -> Unit
 ) {
     // Daftar pilihan menu untuk Galeri
     val galeriOptions = listOf(
@@ -67,25 +69,36 @@ fun GaleriScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(galeriOptions) { menuItem ->
-                GaleriMenuItemCard(menuItem = menuItem)
+                GaleriMenuItemCard(
+                    menuItem = menuItem,
+                    onNavigateToFoto = onNavigateToFoto,
+                    onNavigateToVideo = onNavigateToVideo
+                )
             }
         }
     }
 }
 
-
 @Composable
-private fun GaleriMenuItemCard(menuItem: GaleriMenuItem) {
+private fun GaleriMenuItemCard(
+    menuItem: GaleriMenuItem,
+    onNavigateToFoto: () -> Unit,
+    onNavigateToVideo: () -> Unit
+) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-
-                Toast
-                    .makeText(context, "Membuka ${menuItem.title}", Toast.LENGTH_SHORT)
-                    .show()
-                // TODO: Navigasi ke halaman detail foto atau video
+                when (menuItem.title) {
+                    "Foto" -> onNavigateToFoto()
+                    "Video" -> onNavigateToVideo()
+                    else -> {
+                        Toast
+                            .makeText(context, "Membuka ${menuItem.title}", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
             },
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(2.dp)
